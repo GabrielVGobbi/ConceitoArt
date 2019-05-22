@@ -72,7 +72,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Assinatura</label>
-                                <input type="text" class="form-control" name="assinatura" id="assinatura"  autocomplete="off">
+                                <input type="text" class="form-control" name="assinatura" id="assinatura"  autocomplete="off"> 
                             </div>
                         </div>
                         <div class="col-md-2">
