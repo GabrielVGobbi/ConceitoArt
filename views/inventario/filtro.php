@@ -1,9 +1,7 @@
-
-
 <div class="col-xs-12">
-	<a type="button" style="cursor: pointer;" data-widget="collapse">
-		<div class="box box-default box-solid collapsed">
 
+	<div class="box box-default box-solid collapsed">
+		<a type="button" style="cursor: pointer;" data-widget="collapse">
 			<div class="box-header with-border">
 				<h3 class="box-title">Buscar</h3>
 
@@ -13,7 +11,8 @@
 				</div>
 			</div>
 		</a>
-		
+
+
 		<div class="box-body" style="">
 			<form method="GET">
 				<div class="box-body">
@@ -30,10 +29,10 @@
 							<div class="form-group">
 								<select class="form-control select2" style="width: 100%;" name="filtros[artista]" id="filtros[artista]">
 									<option selected="selected" value="0">Selecione </option>
-									<?php foreach ($viewData['artista'] as $a): ?>
-										<option value="<?php echo $a['art_nome'];?>"  ><?php echo $a['art_nome'] ?></option>
+									<?php foreach ($viewData['artista'] as $a) : ?>
+										<option value="<?php echo $a['art_nome']; ?>"><?php echo $a['art_nome'] ?></option>
 									<?php endforeach; ?>
-								</select> 
+								</select>
 							</div>
 						</div>
 
@@ -50,11 +49,8 @@
 								<input class="form-control" id="filtro_descricao" name="filtros[procedencia]" placeholder="" autocomplete="off">
 							</div>
 						</div>
-
-						
-
 					</div>
-					
+
 					<div class="pull-right">
 						<button type="submit" class="btn btn-primary">Buscar</button>
 					</div>

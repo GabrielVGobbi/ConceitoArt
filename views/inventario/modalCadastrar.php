@@ -1,6 +1,7 @@
 <div class="col-xs-12">
-    <a type="button" style="cursor: pointer;" data-widget="collapse">
-        <div class="box box-default box-solid collapsed-box">
+
+    <div class="box box-default box-solid collapsed-box">
+        <a type="button" style="cursor: pointer;" data-widget="collapse">
             <div class="box-header with-border">
                 <h3 class="box-title">Cadastrar</h3>
                 <div class="box-tools pull-right">
@@ -11,12 +12,12 @@
         </a>
 
         <div class="box-body" style="">
-            <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL?>inventario/add_action" >
+            <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>inventario/add_action">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-6">
                             <label>Artista</label>
-                            <div class="input-group" >
+                            <div class="input-group">
                                 <input type="hidden" name="id_artista" id="id_artista" class="form-control">
                                 <input type="text" class="form-control" name="artista" id="artista" required data-type="search_artista" required="" autocomplete="off">
                                 <span onclick="add_artista()" style="cursor: pointer;border-color: #f00;border-left: 1%;" class="input-group-addon span-artist"><i class="fa fa-check has-error"></i></span>
@@ -24,24 +25,24 @@
                             <div id="art" type="hidden">
 
                                 <span class="span-dropdown">
-                                    <span class="span-dropdown-2" >
+                                    <span class="span-dropdown-2">
                                         <ul class="ul-span-dropdown">
                                             <div class="searchresultsArtista">
 
                                             </div>
                                         </ul>
                                     </span>
-                                </span> 
+                                </span>
 
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <label>Tecnica</label>
-                            <div class="input-group" >
+                            <div class="input-group">
                                 <input type="hidden" name="id_tecnica" id="id_tecnica" class="form-control">
                                 <input type="text" class="form-control" name="tecnica" id="tecnica" required data-type="search_tecnica" required="" autocomplete="off">
-                                <span onclick="add_tecnica()" style="cursor: pointer;border-color: #f00;border-left: 1%;"  class="input-group-addon span-tecnica"><i class="fa fa-check"></i></span>
+                                <span onclick="add_tecnica()" style="cursor: pointer;border-color: #f00;border-left: 1%;" class="input-group-addon span-tecnica"><i class="fa fa-check"></i></span>
                             </div>
                             <div id="art" type="hidden">
 
@@ -53,7 +54,7 @@
                                             </div>
                                         </ul>
                                     </span>
-                                </span> 
+                                </span>
 
                             </div>
                         </div>
@@ -72,7 +73,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Assinatura</label>
-                                <input type="text" class="form-control" name="assinatura" id="assinatura"  autocomplete="off"> 
+                                <input type="text" class="form-control" name="assinatura" id="assinatura" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -111,7 +112,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
 
                     <div class="box box-default box-solid">
@@ -181,7 +182,7 @@
                                         <div class="form-group">
                                             <label>Venda</label>
                                             <select class="form-control select2 select2-hidden-accessible" name="situacao_char" id="situacao_char" style="width: 100%;" tabindex="-1" aria-hidden="true">
-                                                <option  value="1">Vendido</option>
+                                                <option value="1">Vendido</option>
                                                 <option selected="selected" value="0">Não vendido</option>
                                             </select>
                                         </div>
