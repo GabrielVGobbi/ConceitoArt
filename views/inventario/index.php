@@ -79,7 +79,7 @@ include("modalCadastrar.php");
 											
 
 										?>
-										<td><?php echo ($inv['inv_venda'] == '1') ? '<span class="label label-danger">Vendido</span>' : '<span class="label label-success">Não Vendido</span>'?> <?php echo ($inv['id_inv_situacao'] == '1') ? '<span class="label label-warning">Mercado Livre</span>' : '' ?> <?php echo $span; ?> </td>
+										<td><?php echo ($inv['inv_venda'] == '1') ? '<span class="label label-danger">Vendido</span>' : '<span class="label label-success">Não Vendido</span>'?> <?php echo ($inv['id_inv_situacao'] == '1') ? '<span class="label label-warning">Mercado Livre</span>' : '' ?>  </td>
 									</tr>
 
 									<div class="modal fade" id="imgModal<?php echo $inv['id_inventario']?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
