@@ -121,6 +121,7 @@
 
 								
 								<th>Descricao</th>
+								<th>Preço</th>
 
 								<!-- <th style="text-align: center;">Venda</th> -->
 							</tr>
@@ -151,6 +152,7 @@
 										echo ($inv['inv_observacao'] != null ? $inv['inv_observacao'] : "" );
 										?> 
 									</th>
+									<th>R$ <?php echo ($inv['preco_situacao'] != '' ? number_format($inv['preco_situacao'], 2, ',', '.') : '') ?></th>
 
 								</tr>
 							</div>
