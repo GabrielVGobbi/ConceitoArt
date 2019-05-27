@@ -68,7 +68,7 @@ include("modalCadastrar.php");
 										</td>
 										<?php 
 											$sit__= $this->inventario->getSituacaoByOK($inv['id_inventario']); 
-											error_log(print_r($sit__,1));
+											
 											
 												if(isset($sit['retirada']) != 'OK'){
 													$span = '<span class="label label-danger">Em Leilão</span>';

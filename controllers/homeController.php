@@ -90,7 +90,6 @@ class homeController extends controller {
             $_SESSION['form']['type'] = 'error';
             $_SESSION['form']['mensagem'] = "Não foi Possivel Editar o Link";
         }
-        error_log(print_r($_SESSION['form'],1));
         return $_SESSION['form'];
 
     }
