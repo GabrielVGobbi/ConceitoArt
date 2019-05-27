@@ -87,8 +87,9 @@ include("modalCadastrar.php");
 											<?php $this->loadImg($inv, true); ?>
 										</div>
 									</div>
-									<?php include ("modalVisualizar.php"); ?>
-									<?php include ("modalRelatorio.php"); ?>
+									<?php require("modalRelatorio.php"); ?>
+									<?php require("modalVisualizar.php"); ?>
+									
 								<?php endforeach; ?>
 							</tbody>	
 							<?php else: ?> 

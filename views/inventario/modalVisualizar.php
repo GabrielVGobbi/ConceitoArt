@@ -2,7 +2,7 @@
 $i = new Inventario;
 $historico = $i->getHistorico($inv['id_inventario'], '');
 ?>
-<div class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
+<div class="modal fade bd-example-modal-lg" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -305,9 +305,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
             </form>
         </div>
     </div>
-</div>
-
-<script type="text/javascript">
+    <script type="text/javascript">
     function dados_obra(id) {
 
 
@@ -323,3 +321,8 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
 
     }
 </script>
+</div>
+
+
+
+
