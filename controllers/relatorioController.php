@@ -35,7 +35,7 @@ class relatorioController extends controller{
     public function index(){
 
         $this->dataInfo['artista'] = $this->artista->getAll('', $this->id_company);
-        $this->dataInfo['obras'] =  $this->inventario->getAll('0','', $this->id_company);
+        $this->dataInfo['obras'] =  $this->inventario->getAllNoOffset('0','', $this->id_company);
 
         $this->dataInfo['descricao_name'] = $this->vendas->getByNameDescricao();
 

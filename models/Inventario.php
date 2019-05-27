@@ -63,6 +63,36 @@ class Inventario extends model
         INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 
         
+        WHERE " . implode(' AND ', $where) . " GROUP BY inv.id_inventario ORDER BY inv.id_inventario  DESC LIMIT $offset, 10";
+        $sql = $this->db->prepare($sql);
+
+        $this->bindWhere($filtro, $sql);
+
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $this->array = $sql->fetchAll();
+        }
+
+
+        return $this->array;
+    }
+
+    public function getAllNoOffset($offset, $filtro, $id)
+    {
+
+
+
+        $where = $this->buildWhere($filtro, $id);
+
+        $sql = "
+        SELECT * 
+        FROM  procedencia proc
+        RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
+        INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+        INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+
+        
         WHERE " . implode(' AND ', $where) . " ORDER BY inv.id_inventario DESC LIMIT $offset, 10";
         $sql = $this->db->prepare($sql);
 

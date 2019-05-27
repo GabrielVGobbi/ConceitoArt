@@ -131,7 +131,8 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label>Data</label>
-                                            <input type="text" class="form-control" name="data_procedencia" id="data_procedencia" autocomplete="off">
+                                            <input type="text" class="form-control" name="data_procedencia" id="data_procedencia" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo $hist['data_situacao']; ?>">
+
                                         </div>
                                     </div>
 
@@ -162,7 +163,8 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label>Data</label>
-                                            <input type="text" class="form-control" name="data_situacao" id="data_situacao" autocomplete="off">
+                                            <input type="text" class="form-control" name="data_situacao" id="data_situacao" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo $hist['data_situacao']; ?>">
+
                                         </div>
                                     </div>
 
