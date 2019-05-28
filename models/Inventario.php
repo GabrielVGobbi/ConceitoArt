@@ -284,6 +284,9 @@ class Inventario extends model
 
     public function edit($id_company, $id_user, $Parametros, $photo, $id)
     {
+        if(isset($Parametros['id_artista']) && $Parametros['id_artista'] != ''){
+            $id_artista = $Parametros['id_artista'];
+        }
 
         $compra = array();
         $situacao = array();
@@ -325,6 +328,7 @@ class Inventario extends model
         try {
 
             $sql = $this->db->prepare("UPDATE inventario SET
+                id_artista          = :id_artista,
                 id_company          = :id_company, 
                 id_tecnica          = :id_tecnica, 
                 inv_descricao       = :titulo,
@@ -339,9 +343,10 @@ class Inventario extends model
                 
                 WHERE id_inventario = :id;  
 
-                ");
+            ");
 
             $sql->bindValue(':id_company',   $id_company);
+            $sql->bindValue(':id_artista',   $id_artista);
             $sql->bindValue(':id',           $id);
             $sql->bindValue(':id_tecnica',   $id_tecnica);
             $sql->bindValue(':titulo',       $titulo);
@@ -383,6 +388,7 @@ class Inventario extends model
                     $this->updatePriceMercadolivre($id, $Parametros);
                 }
             }*/
+            
         } catch (PDOExecption $e) {
             $sql->rollback();
             error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));

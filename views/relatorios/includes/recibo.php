@@ -30,7 +30,7 @@
 								<div class="col-md-12">
 									<div class="form-group">
 										<label>Endereço</label>
-										<input type="text" class="form-control" name="endereco" id="endereco" autocomplete="off" value="Rua dos Franceses 125 - Bela Vista - São Paulo - SP - CEP: 01329-01" >
+										<input type="text" class="form-control" name="endereco" id="endereco" autocomplete="off" value="Rua Joaquim Eugênio de Lima - Jardim Paulista  - São Paulo - SP - CEP: 01403-001" >
 									</div>
 								</div>
 							</div>

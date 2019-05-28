@@ -2,18 +2,28 @@
 $i = new Inventario;
 $historico = $i->getHistorico($inv['id_inventario'], '');
 ?>
-<div class="modal fade bd-example-modal-lg" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title fc-center" align="center" id="exampleModalLabel"><?php echo $inv['art_nome']; ?></h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/inventario/edit_action/<?php echo $inv['id_inventario'] ?>">
+<form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/inventario/edit_action/<?php echo $inv['id_inventario'] ?>">
+    <div class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="modal-title fc-center" align="center" id="exampleModalLabel"><?php echo $inv['art_nome']; ?> <a class="button" onclick="change_artist()" style="cursor: pointer;"><span aria-hidden="true">&times;</span></a></h2> 
+                    <div class="input_artista" style="display: none;">
+                        <label>Selecione o Artista </label>
+                        <select class="form-control select2" style="width: 100%;" name="id_artista" id="id_artista">
+                            <option value="<?php echo $inv['id_artista'] ?>"><?php echo ucfirst($inv['art_nome']) ?></option>
+                            <?php foreach ($viewData['artista'] as $a) : ?>
+                                <option value="<?php echo $a['id_artista']; ?>"><?php echo ucfirst($a['art_nome']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                </div>
+
                 <input type="hidden" class="form-control" name="server" id="server" autocomplete="off" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                <input type="hidden" class="form-control" name="id_artista" id="id_artista" autocomplete="off" value="<?php echo $inv['id_artista'] ?>">
                 <div class="modal-body">
 
                     <div class="box-header with-border">
@@ -302,10 +312,11 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-    <script type="text/javascript">
+</form>
+<script type="text/javascript">
     function dados_obra(id) {
 
 
@@ -320,9 +331,8 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
         $("#fotos" + id).show("slow");
 
     }
+
+    function change_artist(){
+        $(".input_artista").show("slow");
+    }
 </script>
-</div>
-
-
-
-
