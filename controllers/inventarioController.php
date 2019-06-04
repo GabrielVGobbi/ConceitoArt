@@ -1,15 +1,17 @@
 <?php
-class InventarioController extends controller {
+class InventarioController extends controller
+{
 
-	private $user;
+  private $user;
 
-  public function __construct() {
+  public function __construct()
+  {
     parent::__construct();
     $this->user = new Users();
     $this->user->setLoggedUser();
-    if($this->user->isLogged() == false){
+    if ($this->user->isLogged() == false) {
 
-      header("Location: ".BASE_URL."login");
+      header("Location: " . BASE_URL . "login");
       exit();
     }
 
@@ -17,7 +19,7 @@ class InventarioController extends controller {
     $this->filtro = array();
 
 
-    
+
 
     //CLASSES//
     $this->inventario = new Inventario();
@@ -32,10 +34,11 @@ class InventarioController extends controller {
     );
   }
 
-  public function index() {
+  public function index()
+  {
 
 
-    if(isset($_GET['filtros'])) {
+    if (isset($_GET['filtros'])) {
       $this->filtro = $_GET['filtros'];
     }
 
@@ -44,117 +47,116 @@ class InventarioController extends controller {
 
 
     $this->dataInfo['p'] = 1;
-    if(isset($_GET['p']) && !empty($_GET['p'])){
+    if (isset($_GET['p']) && !empty($_GET['p'])) {
       $this->dataInfo['p'] = intval($_GET['p']);
-      if($this->dataInfo['p'] == 0){
+      if ($this->dataInfo['p'] == 0) {
         $this->dataInfo['p'] = 1;
       }
-    } 
+    }
 
-    $offset = (10 * ($this->dataInfo['p']-1) );
+    $offset = (10 * ($this->dataInfo['p'] - 1));
 
-    $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario($this->id_inv_situacao,$this->user->getCompany(), $this->filtro);
-    $this->dataInfo['p_count']          = ceil( $this->dataInfo['inventario_count'] / 10);
+    $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario($this->id_inv_situacao, $this->user->getCompany(), $this->filtro);
+    $this->dataInfo['p_count']          = ceil($this->dataInfo['inventario_count'] / 10);
 
 
-    $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->filtro,$this->user->getCompany());
+    $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->filtro, $this->user->getCompany());
 
-    $this->loadTemplate($this->dataInfo['pageController']."/index", $this->dataInfo);
+    $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
   }
 
-  public function add() {
+  public function add()
+  {
 
     $this->dataInfo['artista'] = $this->artista->getAll($this->filtro = array(), $this->id_company);
     $this->dataInfo['tecnica'] = $this->tecnica->getAll($this->filtro = array(), $this->id_company);
 
-    if(isset($_SESSION['formError']) && count($_SESSION['formError']) > 0){
+    if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0) {
 
       $this->dataInfo['errorForm'] = $_SESSION['formError'];
-      unset($_SESSION['formError']);      
+      unset($_SESSION['formError']);
     }
 
-    if($this->user->getName() == 'marcio'){
+    if ($this->user->getName() == 'marcio') {
       $this->dataInfo['parametroSituacao'] = $this->parametro->getSituacaoOn();
       $this->dataInfo['parametroProcedencia'] = $this->parametro->getProcedenciaOn();
 
-      $this->loadTemplate($this->dataInfo['pageController']."/marcio/modalCadastro", $this->dataInfo);
-    }else {
+      $this->loadTemplate($this->dataInfo['pageController'] . "/marcio/modalCadastro", $this->dataInfo);
+    } else {
 
-      $this->loadTemplate($this->dataInfo['pageController']."/modalCadastro", $this->dataInfo);
-    }   
+      $this->loadTemplate($this->dataInfo['pageController'] . "/modalCadastro", $this->dataInfo);
+    }
   }
 
-  public function add_action() {
+  public function add_action()
+  {
 
-    if(isset($_POST['id_artista']) && $_POST['id_artista'] != ''){
+    if (isset($_POST['id_artista']) && $_POST['id_artista'] != '') {
 
-      if(isset($_POST['id_tecnica']) && $_POST['id_tecnica'] != ''){
+      if (isset($_POST['id_tecnica']) && $_POST['id_tecnica'] != '') {
 
-        $result = $this->inventario->add($this->user->getCompany(),$this->user->getId(),$_POST,$_FILES['fotos']);
+        $result = $this->inventario->add($this->user->getCompany(), $this->user->getId(), $_POST, $_FILES['fotos']);
       }
 
       $this->addValicao($result);
 
-      header('Location:'.BASE_URL.'inventario');
+      header('Location:' . BASE_URL . 'inventario');
       exit();
     }
   }
 
-  public function edit_action($id) {
+  public function edit_action($id)
+  {
 
-    $result = $this->inventario->edit($this->user->getCompany(),$this->user->getId(),$_POST,$_FILES['fotos'], $id);
+    $result = $this->inventario->edit($this->user->getCompany(), $this->user->getId(), $_POST, $_FILES['fotos'], $id);
 
-    if(!empty($_POST['server'])){
+    if (!empty($_POST['server'])) {
       $location = explode('admin/', $_POST['server']);
-      header('Location:'.BASE_URL.$location[1]);
+      header('Location:' . BASE_URL . $location[1]);
       exit();
-
     } else {
-      header('Location:'.BASE_URL.'inventario');
+      header('Location:' . BASE_URL . 'inventario');
       exit();
     }
   }
 
-  public function duplicarObra($id){
+  public function duplicarObra($id)
+  {
 
     $obra = $this->inventario->getInventarioById($id, $this->user->getCompany());
 
-    $result = $this->inventario->duplicarObra($obra,$this->id_inv_situacao);
+    $result = $this->inventario->duplicarObra($obra, $this->id_inv_situacao);
 
-    if(isset($result['inventario_add']['mensagem']['sucess'])){
-     $_SESSION['form']['success'] = 'Success';
-     $_SESSION['form']['type'] = 'success';
-     $_SESSION['form']['mensagem'] = "Ediçao efetuada com sucesso!!";
+    if (isset($result['inventario_add']['mensagem']['sucess'])) {
+      $_SESSION['form']['success'] = 'Success';
+      $_SESSION['form']['type'] = 'success';
+      $_SESSION['form']['mensagem'] = "Ediçao efetuada com sucesso!!";
+    } elseif (isset($result['inventario_add']['mensagem']['error'])) {
 
-   }elseif (isset($result['inventario_add']['mensagem']['error'])){
+      $_SESSION['form']['success'] = 'Oops!!';
+      $_SESSION['form']['type'] = 'error';
+      $_SESSION['form']['mensagem'] = "Não foi possivel fazer a edição no inventario";
+    }
 
-     $_SESSION['form']['success'] = 'Oops!!';
-     $_SESSION['form']['type'] = 'error';
-     $_SESSION['form']['mensagem'] = "Não foi possivel fazer a edição no inventario";
-   }
+    header('Location:' . BASE_URL . 'inventario');
+    exit();
+  }
 
-   header('Location:'.BASE_URL.'inventario');
-   exit();
+  public function delete($id)
+  {
 
- }
+    $result = $this->inventario->delete($id, $this->user->getCompany());
 
- public function delete($id) {
+    header("Location: " . BASE_URL . "inventario");
 
-    $result = $this->inventario->delete($id,$this->user->getCompany());
-
-    header("Location: ".BASE_URL."inventario");
-
-    if($result){
+    if ($result) {
       $this->dataInfo['success'] = 'true';
       $this->dataInfo['mensagem'] = "Exclusão feita com sucesso!!";
-    }else{
+    } else {
       $this->dataInfo['error'] = 'true';
       $this->dataInfo['mensagem'] = "Não foi possivel excluir!";
     }
-
-  
-  
-}
+  }
 
 
 
@@ -178,41 +180,40 @@ class InventarioController extends controller {
 
 
 
- public function addValicao($result){
+  public function addValicao($result)
+  {
 
-  if(isset($result['inventario_add']['mensagem']['sucess']) && isset($result['mercadolivre_add']['mensagem']['sucess'])){
-   $_SESSION['form']['success'] = 'Success';
-   $_SESSION['form']['type'] = 'success';
-   $_SESSION['form']['mensagem'] = "Cadastro no inventario e no mercado livre efetuado com sucesso!!";
- }elseif (isset($result['inventario_add']['mensagem']['error']) && isset($result['mercadolivre_add']['mensagem']['error'])){
-   $_SESSION['form']['success'] = 'Oops!!';
-   $_SESSION['form']['type'] = 'error';
-   $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro no inventario nem no mercado livre!";
- }elseif (isset($result['inventario_add']['mensagem']['sucess']) && isset($result['mercadolivre_add']['mensagem']['error'])){
-   $_SESSION['form']['success'] = 'Sucess';
-   $_SESSION['form']['type'] = 'warning';
-   $_SESSION['form']['mensagem'] = "Cadastro efetuado no inventario mas deu erro no mercado livre!";
- }elseif (isset($result['inventario_add']['mensagem']['sucess'])){
-   $_SESSION['form']['success'] = 'Sucess';
-   $_SESSION['form']['type'] = 'success';
-   $_SESSION['form']['codigo'] = 'Codigo: ';
-   $_SESSION['form']['mensagem'] = "Cadastro efetuado com sucesso";
- }elseif (isset($result['inventario_add']['mensagem']['error'])){
-   $_SESSION['form']['success'] = 'Oops!!';
-   $_SESSION['form']['type'] = 'error';
-   $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro";
- }elseif (isset($result['mercadolivre_add']['mensagem']['sucess'])){
-   $_SESSION['form']['success'] = 'Sucess!!';
-   $_SESSION['form']['type'] = 'success';
-   $_SESSION['form']['mensagem'] = "Cadastro no mercado livre efetuado com sucesso!!";
- }elseif (isset($result['mercadolivre_add']['mensagem']['error'])){
-   $_SESSION['form']['success'] = 'Oops!!';
-   $_SESSION['form']['type'] = 'error';
-   $_SESSION['form']['mensagem'] = "erro no mercado livre!";
- }
+    if (isset($result['inventario_add']['mensagem']['sucess']) && isset($result['mercadolivre_add']['mensagem']['sucess'])) {
+      $_SESSION['form']['success'] = 'Success';
+      $_SESSION['form']['type'] = 'success';
+      $_SESSION['form']['mensagem'] = "Cadastro no inventario e no mercado livre efetuado com sucesso!!";
+    } elseif (isset($result['inventario_add']['mensagem']['error']) && isset($result['mercadolivre_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Oops!!';
+      $_SESSION['form']['type'] = 'error';
+      $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro no inventario nem no mercado livre!";
+    } elseif (isset($result['inventario_add']['mensagem']['sucess']) && isset($result['mercadolivre_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Sucess';
+      $_SESSION['form']['type'] = 'warning';
+      $_SESSION['form']['mensagem'] = "Cadastro efetuado no inventario mas deu erro no mercado livre!";
+    } elseif (isset($result['inventario_add']['mensagem']['sucess'])) {
+      $_SESSION['form']['success'] = 'Sucess';
+      $_SESSION['form']['type'] = 'success';
+      $_SESSION['form']['codigo'] = 'Codigo: ';
+      $_SESSION['form']['mensagem'] = "Cadastro efetuado com sucesso";
+    } elseif (isset($result['inventario_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Oops!!';
+      $_SESSION['form']['type'] = 'error';
+      $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro";
+    } elseif (isset($result['mercadolivre_add']['mensagem']['sucess'])) {
+      $_SESSION['form']['success'] = 'Sucess!!';
+      $_SESSION['form']['type'] = 'success';
+      $_SESSION['form']['mensagem'] = "Cadastro no mercado livre efetuado com sucesso!!";
+    } elseif (isset($result['mercadolivre_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Oops!!';
+      $_SESSION['form']['type'] = 'error';
+      $_SESSION['form']['mensagem'] = "erro no mercado livre!";
+    }
 
- return $_SESSION['form'];
-
-}
-
+    return $_SESSION['form'];
+  }
 }

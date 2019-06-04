@@ -74,5 +74,14 @@ class controller {
 		return $valor[0];
 	}
 
+	public static function ReturnFormatLimpo($valor){
+		$valor = trim($valor);
+		$valor = str_replace(' ', '', $valor);
+		$valor = str_replace('-', '', $valor);
+		$valor = str_replace('.', '', $valor);
+
+		return $valor;
+	}
+
 
 }
