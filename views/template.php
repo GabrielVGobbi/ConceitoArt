@@ -178,7 +178,6 @@
           <?php $this->loadViewInTemplate($viewName, $viewData); ?>
 
         </section>
-
       </div>
 
     </div>

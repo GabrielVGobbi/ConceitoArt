@@ -1,5 +1,5 @@
 
-<div class="box box-default box-solid no-padding" style="display: none;" id="gerar_relatorio_page">
+<div class="box box-default box-solid no-padding" style="display: all;" id="gerar_relatorio_page">
 	<div class="row">
 		<div class="col-md-12">
 			<form method="GET" action="<?php echo BASE_URL?>relatorio/getRelatorio">

@@ -1,5 +1,4 @@
 <div class="col-xs-12">
-
     <div class="box box-default box-solid collapsed-box">
         <a type="button" style="cursor: pointer;" data-widget="collapse">
             <div class="box-header with-border">
@@ -207,4 +206,3 @@
             </form>
         </div>
     </div>
-</div>

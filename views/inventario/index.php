@@ -1,26 +1,9 @@
 <?php
 include_once("filtro.php");
 include("modalCadastrar.php");
-
-$iphone = strpos($_SERVER['HTTP_USER_AGENT'], "iPhone");
-$ipad = strpos($_SERVER['HTTP_USER_AGENT'], "iPad");
-$android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
-$palmpre = strpos($_SERVER['HTTP_USER_AGENT'], "webOS");
-$berry = strpos($_SERVER['HTTP_USER_AGENT'], "BlackBerry");
-$ipod = strpos($_SERVER['HTTP_USER_AGENT'], "iPod");
-$symbian =  strpos($_SERVER['HTTP_USER_AGENT'], "Symbian");
-
-if ($iphone || $ipad || $android || $palmpre || $ipod || $berry || $symbian == true) {
-	$mobile = true;
-} else {
-	$mobile = false;
-}
-
 ?>
 
-<div class="col-xs-12" style="<?php if ($mobile == true) {
-									echo 'display:none';
-								} ?> ">
+<div class="col-xs-12">
 	<div class="box box-primary">
 		<div class="box-header" style="margin-bottom: 10px;">
 			<h3 class="box-title">Obras</h3>
@@ -48,14 +31,11 @@ if ($iphone || $ipad || $android || $palmpre || $ipod || $berry || $symbian == t
 								</tr>
 							</thead>
 							<?php foreach ($tableDados as $inv) : ?>
-								<tr <?php
-									if ($inv['inv_venda'] == '1') {
+								<tr <?php if ($inv['inv_venda'] == '1') {
 										echo 'class="table-danger"';
 									} elseif ($inv['id_inv_situacao'] == '1') {
 										echo 'class="table-warning"';
-									}
-
-									?>>
+									} ?>>
 									<td class="">
 										<?php $this->include1($button = 'button_table', $dados = array($viewData['pageController'], $inv['id_inventario'])); ?>
 										<button class="btn btn-sm btn-info pop" data-toggle="modal" data-target="#modalInfo<?php echo $inv['id_inventario'] ?>">
@@ -64,13 +44,11 @@ if ($iphone || $ipad || $android || $palmpre || $ipod || $berry || $symbian == t
 										<?php if ($this->userInfo['user']->hasPermission('mercadolivre_view')) : ?>
 											<a href="<?php echo BASE_URL; ?>mercadolivre/addmercadolivre/<?php echo $inv['id_inventario'] ?>"><i class="fa fa-fw fa-info"></i></a>
 										<?php endif; ?>
-
 									</td>
 									<td class="">
 										<a type="button" data-toggle="modal" data-target="#imgModal<?php echo $inv['id_inventario'] ?>">
-											<?php $this->loadImg($inv, false); ?> </a>
-										- <?php echo $inv['id_inventario'] . ' - ' . $inv['art_nome']; ?>
-
+											<?php $this->loadImg($inv, false); ?>
+										</a>- <?php echo $inv['id_inventario'] . ' - ' . $inv['art_nome']; ?>
 									</td>
 									<td class="" onclick="Modal(<?php echo $inv['id_inventario']; ?>, 'modalVisualizar')">
 										<?php
@@ -82,19 +60,6 @@ if ($iphone || $ipad || $android || $palmpre || $ipod || $berry || $symbian == t
 										echo ($inv['inv_tiragem'] != null ? ' - ' . $inv['inv_tiragem'] : "");
 										?>
 									</td>
-									<?php
-									$sit__ = $this->inventario->getSituacaoByOK($inv['id_inventario']);
-
-
-									if (isset($sit['retirada']) != 'OK') {
-										$span = '<span class="label label-danger">Em Leilão</span>';
-									} else {
-										$span = '';
-									}
-
-
-
-									?>
 									<td><?php echo ($inv['inv_venda'] == '1') ? '<span class="label label-danger">Vendido</span>' : '<span class="label label-success">Não Vendido</span>' ?> <?php echo ($inv['id_inv_situacao'] == '1') ? '<span class="label label-warning">Mercado Livre</span>' : '' ?> </td>
 								</tr>
 
@@ -131,7 +96,7 @@ if ($iphone || $ipad || $android || $palmpre || $ipod || $berry || $symbian == t
 																															$w['p'] = $q;
 																															echo http_build_query($w);
 																															?>
-												"><?php echo $q; ?></a></li>
+														"><?php echo $q; ?></a></li>
 					<?php endfor; ?>
 
 				</ul>
@@ -141,32 +106,8 @@ if ($iphone || $ipad || $android || $palmpre || $ipod || $berry || $symbian == t
 	</div>
 </div>
 
-<?php foreach ($tableDados as $inv) : ?>
-	<div class="col-xs-12" style="<?php if ($mobile == false) {echo 'display:none';} ?> ">
-		<div class="box box-primary">
-			<div class="box-header text-center" style="margin-bottom: 10px;">
-				<h3 class="box-title"><?php echo $inv['art_nome']; ?></h3>
-			</div>
 
-			<div class="box-body" style="margin-bottom: 10px;">
-				<div class="text-center" style="margin-bottom: 10px;">
-					<?php $this->loadImg($inv, true); ?> </a>
-				</div>
-				<ul class="list-group list-group-unbordered">
-					<li class="list-group-item">
-						<b>Descrição:</b> <b class="pull-right"><?php echo $inv['inv_descricao']; ?></b>
-					</li>
-					<li class="list-group-item">
-						<b>Tecnica:</b> <b class="pull-right"><?php echo $inv['nome_tecnica']; ?></b>
-					</li>
-					<li class="list-group-item">
-						<b>Tamanho:</b> <b class="pull-right"><?php echo $inv['inv_tamanho']; ?></b>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-<?php endforeach; ?>
+
 
 
 

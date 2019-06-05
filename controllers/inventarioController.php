@@ -15,6 +15,8 @@ class InventarioController extends controller
       exit();
     }
 
+    $this->mobile = controller::returnMobile();
+
     $this->id_inv_situacao = '';
     $this->filtro = array();
 
@@ -61,8 +63,11 @@ class InventarioController extends controller
 
 
     $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->filtro, $this->user->getCompany());
-
-    $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+    if($this->mobile == false){
+      $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+    }else {
+      $this->loadTemplate($this->dataInfo['pageController'] . "/index_mobile", $this->dataInfo);
+    }
   }
 
   public function add()

@@ -6,7 +6,7 @@ include("modalCadastrar.php");
 <div class="col-xs-12">
     <div class="box box-primary">
         <div class="box-header" style="margin-bottom: 10px;">
-            <h3 class="box-title">Obras</h3>
+            <h3 class="box-title">Clientes</h3>
 
             <div class="box-tools pull-right">
                 <div class="has-feedback">

@@ -43,7 +43,7 @@
 						<div class="box-header with-border">
 							<h3 class="box-title"><i class="fa fa-tag" onclick="mudarCliente()"></i> Recebidor</h3>
 						</div>
-						
+
 
 						<div class="box-body" style="display: all">
 							<div class="row">
@@ -100,6 +100,7 @@
 							<button type="submit" class="btn btn-primary">Emitir</button>
 						</div>
 					</div>
+				</div>
 			</form>
 		</div>
 	</div>

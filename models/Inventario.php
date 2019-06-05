@@ -328,7 +328,7 @@ class Inventario extends model
         try {
 
             $sql = $this->db->prepare("UPDATE inventario SET
-                id_artista          = :id_artista,
+                
                 id_company          = :id_company, 
                 id_tecnica          = :id_tecnica, 
                 inv_descricao       = :titulo,
@@ -346,7 +346,7 @@ class Inventario extends model
             ");
 
             $sql->bindValue(':id_company',   $id_company);
-            $sql->bindValue(':id_artista',   $id_artista);
+
             $sql->bindValue(':id',           $id);
             $sql->bindValue(':id_tecnica',   $id_tecnica);
             $sql->bindValue(':titulo',       $titulo);

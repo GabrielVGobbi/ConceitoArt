@@ -2,15 +2,16 @@
 $i = new Inventario;
 $historico = $i->getHistorico($inv['id_inventario'], '');
 ?>
-<form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/inventario/edit_action/<?php echo $inv['id_inventario'] ?>">
-    <div class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
+
+<div class="modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
+    <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/inventario/edit_action/<?php echo $inv['id_inventario'] ?>">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h2 class="modal-title fc-center" align="center" id="exampleModalLabel"><?php echo $inv['art_nome']; ?> <a class="button" onclick="change_artist()" style="cursor: pointer;"><span aria-hidden="true">&times;</span></a></h2> 
+                    <h2 class="modal-title fc-center" align="center" id="exampleModalLabel"><?php echo $inv['art_nome']; ?></h2>
                     <div class="input_artista" style="display: none;">
                         <label>Selecione o Artista </label>
                         <select class="form-control select2" style="width: 100%;" name="id_artista" id="id_artista">
@@ -314,8 +315,10 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+
+
+
 <script type="text/javascript">
     function dados_obra(id) {
 
@@ -332,7 +335,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
 
     }
 
-    function change_artist(){
+    function change_artist() {
         $(".input_artista").show("slow");
     }
 </script>
