@@ -11,6 +11,8 @@
 		$lay_Widht = 'width=366 height=468';
 	}elseif($lay_Widht == 'recibo'){
 		$lay_Widht = 'width: 140.70px; height: 208.14px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px)';
+	}elseif($lay_Widht == 'mobile'){
+		$lay_Widht = 'max-width=40%;';
 	}
 
 	$img = $this->inventario->getImagesByProductId($viewData['id_inventario']);

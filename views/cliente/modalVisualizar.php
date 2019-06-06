@@ -21,13 +21,61 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label>Email</label>
-                                                <input type="text" class="form-control" name="Email" id="Email" autocomplete="off" value="<?php echo $cli['cliente_email']; ?>">
+                                                <input type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo $cli['cliente_email']; ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>RG</label>
+                                                <input type="text" class="form-control" name="rg" id="rg" autocomplete="off" value="<?php echo $cli['cliente_rg']; ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>CPF</label>
+                                                <input type="text" class="form-control" name="cpf" id="cpf" autocomplete="off" value="<?php echo $cli['cliente_cpf']; ?>">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="box box-default box-solid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">oBRAS</h3>
+                                    </div>
+                                    <div class="box-body" style="">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo $cli['cliente_email']; ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>RG</label>
+                                                <input type="text" class="form-control" name="rg" id="rg" autocomplete="off" value="<?php echo $cli['cliente_rg']; ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>CPF</label>
+                                                <input type="text" class="form-control" name="cpf" id="cpf" autocomplete="off" value="<?php echo $cli['cliente_cpf']; ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="modal-footer">
@@ -37,3 +85,4 @@
             </div>
         </form>
     </div>
+</div>

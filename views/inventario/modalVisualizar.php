@@ -205,7 +205,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                         <?php endforeach; ?>
 
                                         <div class="box-body" style="<?php echo ($hist['situacao_char'] == 1 ? 'display: none;'  : ''); ?>; margin-top: -20px;">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Situação</label>
                                                     <input type="text" class="form-control" id="descricao_situacao" name="descricao_situacao" autocomplete="off">
@@ -225,12 +225,20 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <div class="form-group">
                                                     <label>Retirada</label>
                                                     <input type="text" class="form-control" id="retirada" name="retirada" autocomplete="off">
                                                 </div>
                                             </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Codigo</label>
+                                                    <input type="text" class="form-control" id="leilao_codigo" name="leilao_codigo" autocomplete="off">
+                                                </div>
+                                            </div>
+
 
                                             <div class="col-md-2">
                                                 <div class="form-group">
@@ -246,7 +254,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                     </div>
                                 <?php else : ?>
                                     <div class="box-body">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Situação</label>
                                                 <input type="text" class="form-control" id="descricao_situacao" name="descricao_situacao" autocomplete="off">
@@ -267,10 +275,17 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2">
+                                        <div class="col-md-1">
                                             <div class="form-group">
                                                 <label>Retirada</label>
                                                 <input type="text" class="form-control" id="retirada" name="retirada" autocomplete="off">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Codigo</label>
+                                                <input type="text" class="form-control" id="leilao_codigo" name="leilao_codigo" autocomplete="off">
                                             </div>
                                         </div>
 
@@ -316,7 +331,8 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
             </div>
         </div>
     </form>
-
+</div>
+</div>
 
 
 <script type="text/javascript">

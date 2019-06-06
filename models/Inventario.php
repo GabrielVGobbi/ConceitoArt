@@ -213,6 +213,8 @@ class Inventario extends model
         $situacao['situacao_char']                        = ($Parametros['situacao_char']);
         $situacao['retirada']                             =  isset($Parametros['retirada']) ? $Parametros['retirada'] : '';
         $situacao['localizacao']                          = ($Parametros['localizacao']);
+        $situacao['leilao_codigo']                        =  controller::ReturnFormatLimpo($Parametros['leilao_codigo']);
+
 
         try {
 
@@ -313,6 +315,9 @@ class Inventario extends model
         $situacao['preco_situacao']                       =  controller::PriceSituation($Parametros['preco_situacao']);
         $situacao['situacao_char']                        = ($Parametros['situacao_char']);
         $situacao['retirada'] = isset($Parametros['retirada']) ? $Parametros['retirada'] : '';
+        $situacao['leilao_codigo']                        =  controller::ReturnFormatLimpo($Parametros['leilao_codigo']);
+
+        
 
         //SITUACAO DA OBRA (EDIÇÃO)
         if (!empty($Parametros['edit_situacao'])) {
@@ -424,7 +429,7 @@ class Inventario extends model
     public function setSituacao($id_product, $id_company, $id_user, $situacao)
     {
 
-
+        error_log(print_r($situacao,1));
         $sql = $this->db->prepare("INSERT INTO situacao_obra SET 
 
             id_company             = :id_company, 
@@ -435,7 +440,8 @@ class Inventario extends model
             data_situacao          = :data_situacao,
             situacao_char          = :situacao_char,
             retirada               = :retirada,
-            localizacao            = :localizacao
+            localizacao            = :localizacao,
+            codigo                 = :codigo
 
             ");
 
@@ -448,6 +454,7 @@ class Inventario extends model
         $sql->bindValue(":situacao_char",       $situacao['situacao_char']);
         $sql->bindValue(":retirada",            $situacao['retirada']);
         $sql->bindValue(":localizacao",         $situacao['localizacao']);
+        $sql->bindValue(":codigo",              $situacao['leilao_codigo']);
 
         $sql->execute();
     }
