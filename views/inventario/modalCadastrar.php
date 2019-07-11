@@ -176,7 +176,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label>Codigo</label>
-                                            <input type="text" class="form-control" name="leilao_codigo" id="leilao_codigo" autocomplete="off">
+                                            <input type="text" class="form-control" name="leilao_codigo_foto" id="leilao_codigo_foto" autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="col-md-2">

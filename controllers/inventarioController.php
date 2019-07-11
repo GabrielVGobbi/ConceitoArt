@@ -18,10 +18,7 @@ class InventarioController extends controller
     $this->mobile = controller::returnMobile();
 
     $this->id_inv_situacao = '';
-    $this->filtro = array();
-
-
-
+ 
 
     //CLASSES//
     $this->inventario = new Inventario();
@@ -32,49 +29,52 @@ class InventarioController extends controller
     $this->dataInfo = array(
       'pageController' => 'inventario',
       'user' => $this->user->getInfo($this->user->getId(), $this->user->getCompany()),
-
+      'filtro' => array(),
     );
   }
 
   public function index()
   {
 
-
-    if (isset($_GET['filtros'])) {
-      $this->filtro = $_GET['filtros'];
-    }
-
-    $this->dataInfo['artista']      = $this->artista->getAll('', $this->user->getCompany());
-    $this->dataInfo['tecnica']      = $this->tecnica->getAll('', $this->user->getCompany());
-
-
-    $this->dataInfo['p'] = 1;
-    if (isset($_GET['p']) && !empty($_GET['p'])) {
-      $this->dataInfo['p'] = intval($_GET['p']);
-      if ($this->dataInfo['p'] == 0) {
-        $this->dataInfo['p'] = 1;
+    if ($this->user->hasPermission('clientes_view')) {
+      if (isset($_GET['filtros'])) {
+        $this->dataInfo['filtro'] = $_GET['filtros'];
       }
-    }
 
-    $offset = (10 * ($this->dataInfo['p'] - 1));
-
-    $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario($this->id_inv_situacao, $this->user->getCompany(), $this->filtro);
-    $this->dataInfo['p_count']          = ceil($this->dataInfo['inventario_count'] / 10);
+      $this->dataInfo['artista']      = $this->artista->getAll('', $this->user->getCompany());
+      $this->dataInfo['tecnica']      = $this->tecnica->getAll('', $this->user->getCompany());
 
 
-    $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->filtro, $this->user->getCompany());
-    if($this->mobile == false){
-      $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
-    }else {
-      $this->loadTemplate($this->dataInfo['pageController'] . "/index_mobile", $this->dataInfo);
-    }
+      $this->dataInfo['p'] = 1;
+      if (isset($_GET['p']) && !empty($_GET['p'])) {
+        $this->dataInfo['p'] = intval($_GET['p']);
+        if ($this->dataInfo['p'] == 0) {
+          $this->dataInfo['p'] = 1;
+        }
+      }
+
+      $offset = (10 * ($this->dataInfo['p'] - 1));
+
+      $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario($this->id_inv_situacao, $this->user->getCompany(), $this->dataInfo['filtro']);
+      $this->dataInfo['p_count']          = ceil($this->dataInfo['inventario_count'] / 10);
+
+
+      $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->dataInfo['filtro'], $this->user->getCompany());
+      //if($this->mobile == false){
+        $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+      //}else {
+      // $this->loadTemplate($this->dataInfo['pageController'] . "/index_mobile", $this->dataInfo);
+      //}
+      } else {
+        
+      }
   }
 
   public function add()
   {
 
-    $this->dataInfo['artista'] = $this->artista->getAll($this->filtro = array(), $this->id_company);
-    $this->dataInfo['tecnica'] = $this->tecnica->getAll($this->filtro = array(), $this->id_company);
+    $this->dataInfo['artista'] = $this->artista->getAll($this->dataInfo['filtro'] = array(), $this->id_company);
+    $this->dataInfo['tecnica'] = $this->tecnica->getAll($this->dataInfo['filtro'] = array(), $this->id_company);
 
     if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0) {
 

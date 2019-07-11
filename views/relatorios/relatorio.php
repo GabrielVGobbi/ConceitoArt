@@ -142,7 +142,7 @@
 
 									<th>
 										<?php 
-										echo strtoupper($inv['art_nome']).' - ';
+										echo mb_strtoupper($inv['art_nome'],'UTF-8').' - ';
 										echo ($inv['inv_descricao'] != null ?$inv['inv_descricao'].' - ' : "" );
 										echo ($inv['nome_tecnica'] != null ?$inv['nome_tecnica'].' - ' : "" );
 										echo ($inv['inv_assinatura'] != null ?$inv['inv_assinatura'].' - ' : "" );

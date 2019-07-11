@@ -102,7 +102,7 @@ Class Relatorio extends model {
 
 		if(!empty($filtro['situacao'])) {
 
-			$this->where[] = "sit.descricao_situacao LIKE :situacao";	
+			$this->where[] = "sit.descricao_situacao = :situacao";	
 		}
 
 		if(!empty($filtro['data'])) {
@@ -129,7 +129,7 @@ Class Relatorio extends model {
 
 		if(!empty($filtro['situacao'])) {
 			if($filtro['situacao'] != ''){
-				$sql->bindValue(":situacao", '%'.$filtro['situacao'].'%');
+				$sql->bindValue(":situacao", $filtro['situacao']);
 			}
 		}
 

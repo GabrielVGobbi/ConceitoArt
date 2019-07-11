@@ -37,14 +37,17 @@ class relatorioController extends controller
 
     public function index()
     {
+        if ($this->user->hasPermission('report_view')) {
+            $this->dataInfo['artista'] = $this->artista->getAll('', $this->id_company);
+            $this->dataInfo['cliente'] = $this->cliente->getAll('', $this->id_company);
+            $this->dataInfo['obras'] =  $this->inventario->getAllNoOffset('0', '', $this->id_company);
 
-        $this->dataInfo['artista'] = $this->artista->getAll('', $this->id_company);
-        $this->dataInfo['cliente'] = $this->cliente->getAll('', $this->id_company);
-        $this->dataInfo['obras'] =  $this->inventario->getAllNoOffset('0', '', $this->id_company);
+            $this->dataInfo['descricao_name'] = $this->vendas->getByNameDescricao();
 
-        $this->dataInfo['descricao_name'] = $this->vendas->getByNameDescricao();
+            $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+        } else {
 
-        $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+        }
     }
 
     public function getRecibo()

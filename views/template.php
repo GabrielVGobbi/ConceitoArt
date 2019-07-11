@@ -31,6 +31,8 @@
 
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/dist/css/skins/_all-skins.min.css">
 
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+
   <script src="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/bower_components/jquery/dist/jquery.min.js"></script>
 
   <script src="<?php echo BASE_URL; ?>node_modules/sweetalert/dist/sweetalert.min.js"></script>
@@ -45,7 +47,9 @@
 
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/template.css">
 </head>
-
+<?php 
+error_log(print_r($this->userInfo,1));
+?>
 <body class="hold-transition skin-blue layout-top-nav">
   <div class="wrapper">
 
@@ -62,26 +66,25 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
             <ul class="nav navbar-nav">
-              <!-- <?php if ($this->userInfo['user']->hasPermission('user_view')) : ?>
-                  <li class="active"><a href="<?php echo BASE_URL; ?>usuario">Usuarios <span class="sr-only">(current)</span></a></li>
+
+
+    
+              <?php if ($this->userInfo['user']->hasPermission('inventario_view')) : ?>
+                <li class="active"><a href="<?php echo BASE_URL; ?>inventario">Obras <span class="sr-only">(current)</span></a></li>
               <?php endif; ?>
-
-              <?php if ($this->userInfo['user']->hasPermission('user_view')) : ?>
-                  <li class="active"><a href="<?php echo BASE_URL; ?>usuario">Usuarios <span class="sr-only">(current)</span></a></li>
-              <?php endif; ?>
-
-              <?php if ($this->userInfo['user']->hasPermission('user_view')) : ?>
-                  <li class="active"><a href="<?php echo BASE_URL; ?>usuario">Usuarios <span class="sr-only">(current)</span></a></li>
-                <?php endif; ?> -->
-
-              <li class="active"><a href="<?php echo BASE_URL; ?>inventario">Obras <span class="sr-only">(current)</span></a></li>
               <?php if ($this->userInfo['user']->hasPermission('mercadolivre_view')) : ?>
                 <li class="active"><a href="<?php echo BASE_URL; ?>mercadolivre">Mercado Livre <span class="sr-only">(current)</span></a></li>
               <?php endif; ?>
-              <li class="active"><a href="<?php echo BASE_URL; ?>relatorio">Relatórios <span class="sr-only">(current)</span></a></li>
 
+              <?php if ($this->userInfo['user']->hasPermission('report_view')) : ?>
+                <li class="active"><a href="<?php echo BASE_URL; ?>relatorio">Relatórios <span class="sr-only">(current)</span></a></li>
+              <?php endif; ?>
               <?php if ($this->userInfo['user']->hasPermission('clientes_view')) : ?>
                 <li class="active"><a href="<?php echo BASE_URL; ?>cliente">Clientes <span class="sr-only">(current)</span></a></li>
+              <?php endif; ?>
+
+              <?php if ($this->userInfo['user']->hasPermission('notas_view')) : ?>
+                <li class="active"><a href="<?php echo BASE_URL; ?>notas">Notas <span class="sr-only">(current)</span></a></li>
               <?php endif; ?>
 
             </ul>

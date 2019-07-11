@@ -1,11 +1,13 @@
 <?php
 include_once("filtro.php");
 include_once("modalCadastrar.php");
+
 ?>
 
 
 
 <div class="col-xs-12">
+</div>
 <?php foreach ($tableDados as $inv) : ?>
 
     <div class="box box-default">

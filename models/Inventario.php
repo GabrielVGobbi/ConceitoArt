@@ -86,14 +86,12 @@ class Inventario extends model
         $where = $this->buildWhere($filtro, $id);
 
         $sql = "
-        SELECT * 
-        FROM  procedencia proc
-        RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
+        SELECT *  FROM inventario inv 
         INNER JOIN artista art ON (inv.id_artista = art.id_artista)
         INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 
         
-        WHERE " . implode(' AND ', $where) . " ORDER BY inv.id_inventario DESC LIMIT $offset, 10";
+        WHERE " . implode(' AND ', $where) . " ORDER BY inv.id_inventario DESC ";
         $sql = $this->db->prepare($sql);
 
         $this->bindWhere($filtro, $sql);
@@ -149,6 +147,14 @@ class Inventario extends model
             }
         }
 
+        if (!empty($filtro['venda'])) {
+
+            if ($filtro['venda'] != '') {
+
+                $where[] = "inv.inv_venda = :venda";
+            }
+        }
+
         return $where;
     }
 
@@ -176,6 +182,17 @@ class Inventario extends model
         if (!empty($filtro['titulo'])) {
             if ($filtro['titulo'] != '') {
                 $sql->bindValue(":inv_descricao", '%' . $filtro['titulo'] . '%');
+            }
+        }
+
+        if (!empty($filtro['venda'])) {
+            if ($filtro['venda'] != '') {
+                if($filtro['venda'] == '2'){
+                    $filtro['venda'] = '0';
+                }else {
+                    $filtro['venda'] == '1';
+                }
+                $sql->bindValue(":venda", $filtro['venda']);
             }
         }
     }
@@ -429,7 +446,6 @@ class Inventario extends model
     public function setSituacao($id_product, $id_company, $id_user, $situacao)
     {
 
-        error_log(print_r($situacao,1));
         $sql = $this->db->prepare("INSERT INTO situacao_obra SET 
 
             id_company             = :id_company, 
@@ -674,7 +690,7 @@ class Inventario extends model
         $artista_name = $artistaName;
         $artista = str_replace(' ', '_', $artista_name);
 
-        $param = isset($Parametros['leilao_codigo']) ? $Parametros['leilao_codigo'] : '';
+        $param = isset($Parametros['leilao_codigo_foto']) ? $Parametros['leilao_codigo_foto'] : '';
 
         if (!empty($param) && $param != '') {
 

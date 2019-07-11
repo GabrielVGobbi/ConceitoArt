@@ -29,7 +29,7 @@
 		
 <?php else: ?>
 
-	<img src="https://www.buritama.sp.leg.br/imagens/parlamentares-2013-2016/sem-foto.jpg/image" class="img-table" style="<?php echo $lay_Widht ?>;">
+	<img src="https://www.buritama.sp.leg.br/imagens/parlamentares-2013-2016/sem-foto.jpg/image" class="img-table" style="<?php echo $lay_Widht ?>;"/>
 
 <?php endif; ?>
 
