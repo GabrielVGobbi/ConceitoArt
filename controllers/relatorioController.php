@@ -69,7 +69,7 @@ class relatorioController extends controller
 
             if(isset($_GET['cliente']) && $_GET['cliente'] != ''){
                 $dados_cliente = $this->cliente->getClienteById($_GET['cliente'], $this->id_company);
-                error_log(print_r($dados_cliente,1));
+
                 $this->dataInfo['nome_r']       =  $dados_cliente[0]['cliente_nome'];
                 $this->dataInfo['cpf_r']        =  $dados_cliente[0]['cliente_cpf'];
                 $this->dataInfo['endereco_r']   =  $dados_cliente[0]['cliente_endereco'];

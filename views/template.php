@@ -48,7 +48,6 @@
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/template.css">
 </head>
 <?php 
-error_log(print_r($this->userInfo,1));
 ?>
 <body class="hold-transition skin-blue layout-top-nav">
   <div class="wrapper">

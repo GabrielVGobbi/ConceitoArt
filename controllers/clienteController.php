@@ -21,7 +21,7 @@ class ClienteController extends controller
 
         $this->filtro = array();
         $this->dataInfo = array(
-            'pageController' => 'cliente'
+            'pageController' => 'clientes'
         );
     }
 
@@ -50,7 +50,6 @@ class ClienteController extends controller
             $this->dataInfo['errorForm'] = $_SESSION['formError'];
             unset($_SESSION['formError']);
         }
-
     }
 
     public function add_action()
@@ -58,8 +57,8 @@ class ClienteController extends controller
 
         if (isset($_POST['cliente_nome']) && $_POST['cliente_nome'] != '') {
 
-            $result = $this->cliente->add($this->user->getCompany(),$_POST);
-            
+            $result = $this->cliente->add($this->user->getCompany(), $_POST);
+
             $this->addValicao($result);
 
             header('Location:' . BASE_URL . 'cliente');
@@ -67,36 +66,52 @@ class ClienteController extends controller
         }
     }
 
-    public function delete($id) {
+    public function edit_action($id)
+    {
 
-        $result = $this->cliente->delete($id,$this->user->getCompany());
-    
-        header("Location: ".BASE_URL."cliente");
-    
-        if($result){
-          $this->dataInfo['success'] = 'true';
-          $this->dataInfo['mensagem'] = "Exclusão feita com sucesso!!";
-        }else{
-          $this->dataInfo['error'] = 'true';
-          $this->dataInfo['mensagem'] = "Não foi possivel excluir!";
-        } 
-      
+
+
+        if (isset($_POST['cliente_nome']) && $_POST['cliente_nome'] != '') {
+
+            $result = $this->cliente->edit($_POST);
+
+            $this->addValicao($result);
+
+            header('Location:' . BASE_URL . 'cliente');
+            exit();
+        }
     }
-    
 
-    public function addValicao($result){
+    public function delete($id)
+    {
 
-        if(isset($result['inventario_add']['mensagem']['sucess']) && isset($result['mercadolivre_add']['mensagem']['sucess'])){
-         $_SESSION['form']['success'] = 'Success';
-         $_SESSION['form']['type'] = 'success';
-         $_SESSION['form']['mensagem'] = "Cadastro no inventario e no mercado livre efetuado com sucesso!!";
-       }elseif (isset($result['inventario_add']['mensagem']['error']) && isset($result['mercadolivre_add']['mensagem']['error'])){
-         $_SESSION['form']['success'] = 'Oops!!';
-         $_SESSION['form']['type'] = 'error';
-         $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro no inventario nem no mercado livre!";
-       }
-      
-       return $_SESSION['form'];
-      
-      }
+        $result = $this->cliente->delete($id, $this->user->getCompany());
+
+        header("Location: " . BASE_URL . "cliente");
+
+        if ($result) {
+            $this->dataInfo['success'] = 'true';
+            $this->dataInfo['mensagem'] = "Exclusão feita com sucesso!!";
+        } else {
+            $this->dataInfo['error'] = 'true';
+            $this->dataInfo['mensagem'] = "Não foi possivel excluir!";
+        }
+    }
+
+
+    public function addValicao($result)
+    {
+
+        if (isset($result['cliente_add']['mensagem']['sucess'])) {
+            $_SESSION['form']['success'] = 'Success';
+            $_SESSION['form']['type'] = 'success';
+            $_SESSION['form']['mensagem'] = "Cadastro de Cliente Efetuado com sucesso!!";
+        } elseif (isset($result['cliente_add']['mensagem']['error'])) {
+            $_SESSION['form']['success'] = 'Oops!!';
+            $_SESSION['form']['type'] = 'error';
+            $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro, Contate o administrador do sistema";
+        }
+
+        return $_SESSION['form'];
+    }
 }

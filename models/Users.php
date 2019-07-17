@@ -52,7 +52,8 @@ class Users extends model
 			if($sql->rowCount() > 0 ){
 				$this->permissions = new Permissions();
 				$this->userInfo = $sql->fetch();
-				$this->permissions->setGroup($id, $this->userInfo['id_company']);
+				$id_group = $this->userInfo['id_group'];
+				$this->permissions->setGroup($id_group, $this->userInfo['id_company']);
 			}
 
 		}else {

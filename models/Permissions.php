@@ -30,9 +30,7 @@ class Permissions extends model {
 			if ($sql->rowCount() > 0) {
 				foreach ($sql->fetchAll() as $item) {
 					$this->permissions[] = $item['name'];
-
-
-				}
+				}	
 			}
 		} 	
 	}

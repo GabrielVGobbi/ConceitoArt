@@ -36,7 +36,7 @@ class InventarioController extends controller
   public function index()
   {
 
-    if ($this->user->hasPermission('clientes_view')) {
+    if ($this->user->hasPermission('inventario_view')) {
       if (isset($_GET['filtros'])) {
         $this->dataInfo['filtro'] = $_GET['filtros'];
       }
