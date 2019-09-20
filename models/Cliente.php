@@ -69,9 +69,9 @@ class Cliente extends model
 	{
 
 		$cliente_nome = controller::ReturnValor($Parametros['cliente_nome']);
-		$cliente_email = controller::ReturnValor($Parametros['email']);
+		$cliente_email = mb_strtolower($Parametros['email']);
 		$cliente_rg = controller::ReturnFormatLimpo($Parametros['rg']);
-		$cliente_cpf = controller::ReturnFormatLimpo($Parametros['cpf']);
+		$cliente_cpf = ($Parametros['cpf']);
 
 		if (isset($Parametros['cep']) && $Parametros['cep'] != '') {
 			try {
@@ -81,7 +81,9 @@ class Cliente extends model
             		cidade = :cidade,
             		bairro = :bairro,
             		estado = :estado,
-					cep = :cep");
+					cep = :cep,
+					complemento = :complemento
+				");
 
 				$sql->bindValue(":rua", $Parametros['rua']);
 				$sql->bindValue(":numero", $Parametros['numero']);
@@ -89,6 +91,7 @@ class Cliente extends model
 				$sql->bindValue(":bairro", $Parametros['bairro']);
 				$sql->bindValue(":estado", $Parametros['estado']);
 				$sql->bindValue(":cep", $Parametros['cep']);
+				$sql->bindValue(":complemento", $Parametros['complemento']);
 				$sql->execute();
 
 				$id_endereco = $this->db->lastInsertId();
@@ -145,9 +148,9 @@ class Cliente extends model
 	{
 
 		$cliente_nome = controller::ReturnValor($Parametros['cliente_nome']);
-		$cliente_email = controller::ReturnValor($Parametros['email']);
+		$cliente_email = strtolower($Parametros['email']);
 		$cliente_rg = controller::ReturnFormatLimpo($Parametros['rg']);
-		$cliente_cpf = controller::ReturnFormatLimpo($Parametros['cpf']);
+		$cliente_cpf = ($Parametros['cpf']);
 
 		if (isset($Parametros['id_cliente']) && $Parametros['id_cliente'] != '') {
 
@@ -176,7 +179,8 @@ class Cliente extends model
             		cidade = :cidade,
             		bairro = :bairro,
             		estado = :estado,
-					cep = :cep
+					cep = :cep,
+					complemento = :complemento
 
 					WHERE id_endereco = :id_endereco
 			");
@@ -188,6 +192,7 @@ class Cliente extends model
 			$sql->bindValue(":estado", $Parametros['estado']);
 			$sql->bindValue(":cep", $Parametros['cep']);
 			$sql->bindValue(":id_endereco", $Parametros['id_endereco']);
+			$sql->bindValue(":complemento", $Parametros['complemento']);
 			$sql->execute();
 		} else {
 			
@@ -203,7 +208,10 @@ class Cliente extends model
             		cidade = :cidade,
             		bairro = :bairro,
             		estado = :estado,
-					cep = :cep");
+					cep = :cep,
+					complemento = :complemento
+
+				");
 
 		$sql->bindValue(":rua", $Parametros['rua']);
 		$sql->bindValue(":numero", $Parametros['numero']);
@@ -211,6 +219,8 @@ class Cliente extends model
 		$sql->bindValue(":bairro", $Parametros['bairro']);
 		$sql->bindValue(":estado", $Parametros['estado']);
 		$sql->bindValue(":cep", $Parametros['cep']);
+		$sql->bindValue(":complemento", $Parametros['complemento']);
+
 		$sql->execute();
 
 		$id_endereco = $this->db->lastInsertId();

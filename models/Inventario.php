@@ -2,32 +2,32 @@
 class Inventario extends model
 {
 
-    private $InvetarioInfo;
+  private $InvetarioInfo;
 
-    public function __construct()
-    {
-        parent::__construct();
+  public function __construct()
+  {
+    parent::__construct();
 
-        $this->artista = new Artista();
-        $this->array = array();
-        $this->retorno = array();
+    $this->artista = new Artista();
+    $this->array = array();
+    $this->retorno = array();
+  }
+
+  public function getCountInventario($id_inv_situacao, $id, $filtro)
+  {
+
+    $r = 0;
+
+    if ($id_inv_situacao == '' || $id_inv_situacao == 0) {
+      $where = '';
+    } elseif ($id_inv_situacao == 1 || $id_inv_situacao == 2) {
+      $where = ' AND id_inv_situacao = :id_inv_situacao';
     }
 
-    public function getCountInventario($id_inv_situacao, $id, $filtro)
-    {
-
-        $r = 0;
-
-        if ($id_inv_situacao == '' || $id_inv_situacao == 0) {
-            $where = '';
-        } elseif ($id_inv_situacao == 1 || $id_inv_situacao == 2) {
-            $where = ' AND id_inv_situacao = :id_inv_situacao';
-        }
-
-        $where = $this->buildWhere($filtro, $id);
+    $where = $this->buildWhere($filtro, $id);
 
 
-        $sql = "SELECT COUNT(*) AS c 
+    $sql = "SELECT COUNT(*) AS c 
         FROM  procedencia proc
         RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
         INNER JOIN artista art ON (inv.id_artista = art.id_artista)
@@ -35,27 +35,25 @@ class Inventario extends model
 
         
         WHERE " . implode(' AND ', $where);
-        $sql = $this->db->prepare($sql);
+    $sql = $this->db->prepare($sql);
 
 
-        $this->bindWhere($filtro, $sql);
+    $this->bindWhere($filtro, $sql);
 
-        $sql->execute();
-        $row = $sql->fetch();
+    $sql->execute();
+    $row = $sql->fetch();
 
-        $r = $row['c'];
+    $r = $row['c'];
 
-        return $r;
-    }
+    return $r;
+  }
 
-    public function getAll($offset, $filtro, $id)
-    {
+  public function getAll($offset, $filtro, $id)
+  {
 
+    $where = $this->buildWhere($filtro, $id);
 
-
-        $where = $this->buildWhere($filtro, $id);
-
-        $sql = "
+    $sql = "
         SELECT * 
         FROM  procedencia proc
         RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
@@ -64,178 +62,212 @@ class Inventario extends model
 
         
         WHERE " . implode(' AND ', $where) . " GROUP BY inv.id_inventario ORDER BY inv.id_inventario  DESC LIMIT $offset, 10";
-        $sql = $this->db->prepare($sql);
+    $sql = $this->db->prepare($sql);
 
-        $this->bindWhere($filtro, $sql);
+    $this->bindWhere($filtro, $sql);
 
-        $sql->execute();
+    $sql->execute();
 
-        if ($sql->rowCount() > 0) {
-            $this->array = $sql->fetchAll();
-        }
+    if ($sql->rowCount() > 0) {
+        $this->array = $sql->fetchAll();
 
-
-        return $this->array;
+       
+        
     }
 
-    public function getAllNoOffset($offset, $filtro, $id)
-    {
+    return $this->array;
+  }
+
+  public function getID($offset, $filtro, $id)
+  {
 
 
 
-        $where = $this->buildWhere($filtro, $id);
+    $where = $this->buildWhere($filtro, $id);
 
-        $sql = "
+    $sql = "
+        SELECT inv.id_inventario 
+        FROM  procedencia proc
+        RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
+        INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+        INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+
+        
+        WHERE " . implode(' AND ', $where) . " GROUP BY inv.id_inventario ORDER BY inv.id_inventario  DESC LIMIT $offset, 10";
+    $sql = $this->db->prepare($sql);
+
+    $this->bindWhere($filtro, $sql);
+
+    $sql->execute();
+
+    if ($sql->rowCount() > 0) {
+        $this->array = $sql->fetchAll();
+
+       
+        
+    }
+
+    return $this->array;
+  }
+
+  public function getAllNoOffset($offset, $filtro, $id)
+  {
+
+
+
+    $where = $this->buildWhere($filtro, $id);
+
+    $sql = "
         SELECT *  FROM inventario inv 
         INNER JOIN artista art ON (inv.id_artista = art.id_artista)
         INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 
         
         WHERE " . implode(' AND ', $where) . " ORDER BY inv.id_inventario DESC ";
-        $sql = $this->db->prepare($sql);
+    $sql = $this->db->prepare($sql);
 
-        $this->bindWhere($filtro, $sql);
+    $this->bindWhere($filtro, $sql);
 
-        $sql->execute();
+    $sql->execute();
 
-        if ($sql->rowCount() > 0) {
-            $this->array = $sql->fetchAll();
-        }
-
-
-        return $this->array;
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetchAll();
     }
 
-    private function buildWhere($filtro, $id)
-    {
 
-        $where = array(
-            'inv.id_company=' . $id
-        );
+    return $this->array;
+  }
 
+  private function buildWhere($filtro, $id)
+  {
 
-        if (!empty($filtro['id_inventario'])) {
-            $where[] = "inv.id_inventario = :id_inventario";
-        }
-
-        if (!empty($filtro['id_inv_situacao'])) {
-            $where[] = "inv.id_inv_situacao = :id_inv_situacao";
-        }
+    $where = array(
+      'inv.id_company=' . $id
+    );
 
 
-        if (!empty($filtro['artista'])) {
-
-            if ($filtro['artista'] != '') {
-
-                $where[] = "art.art_nome LIKE :art_nome";
-            }
-        }
-
-        if (!empty($filtro['titulo'])) {
-
-            if ($filtro['titulo'] != '') {
-
-                $where[] = "(inv_descricao LIKE :inv_descricao) OR (inv_tiragem LIKE :inv_descricao)";
-            }
-        }
-
-        if (!empty($filtro['procedencia'])) {
-
-            if ($filtro['procedencia'] != '') {
-
-                $where[] = "proc.descricao LIKE :procedencia";
-            }
-        }
-
-        if (!empty($filtro['venda'])) {
-
-            if ($filtro['venda'] != '') {
-
-                $where[] = "inv.inv_venda = :venda";
-            }
-        }
-
-        return $where;
+    if (!empty($filtro['id_inventario'])) {
+      $where[] = "inv.id_inventario = :id_inventario";
     }
 
-    private function bindWhere($filtro, &$sql)
-    {
-
-        if (!empty($filtro['id_inventario'])) {
-            $sql->bindValue(":id_inventario", $filtro['id_inventario']);
-        }
-
-        if (!empty($filtro['id_inv_situacao'])) {
-            $sql->bindValue(":id_inv_situacao", $filtro['id_inv_situacao']);
-        }
-
-        if (!empty($filtro['procedencia'])) {
-            $sql->bindValue(":procedencia", '%' . $filtro['procedencia'] . '%');
-        }
-
-        if (!empty($filtro['artista'])) {
-            if ($filtro['artista'] != '') {
-                $sql->bindValue(":art_nome", '%' . $filtro['artista'] . '%');
-            }
-        }
-
-        if (!empty($filtro['titulo'])) {
-            if ($filtro['titulo'] != '') {
-                $sql->bindValue(":inv_descricao", '%' . $filtro['titulo'] . '%');
-            }
-        }
-
-        if (!empty($filtro['venda'])) {
-            if ($filtro['venda'] != '') {
-                if($filtro['venda'] == '2'){
-                    $filtro['venda'] = '0';
-                }else {
-                    $filtro['venda'] == '1';
-                }
-                $sql->bindValue(":venda", $filtro['venda']);
-            }
-        }
+    if (!empty($filtro['id_inv_situacao'])) {
+      $where[] = "inv.id_inv_situacao = :id_inv_situacao";
     }
 
-    public function add($id_company, $id_user, $Parametros, $photo)
-    {
-        $action = 'CADASTRO';
-        $id_inv_situacao = '2';
 
-        $compra = array();
-        $situacao = array();
+    if (!empty($filtro['artista'])) {
 
-        $visivel = isset($Parametros['visivel']) ? $Parametros['visivel'] : '1';
-        $etiqueta = isset($Parametros['etiqueta']) ? $Parametros['etiqueta'] : '1';
+      if ($filtro['artista'] != '') {
+
+        $where[] = "art.art_nome LIKE :art_nome";
+      }
+    }
+
+    if (!empty($filtro['titulo'])) {
+
+      if ($filtro['titulo'] != '') {
+
+        $where[] = "(inv_descricao LIKE :inv_descricao) OR (inv_tiragem LIKE :inv_descricao) OR (tec.nome_tecnica LIKE :inv_descricao)";
+      }
+    }
+
+    if (!empty($filtro['procedencia'])) {
+
+      if ($filtro['procedencia'] != '') {
+
+        $where[] = "proc.descricao LIKE :procedencia";
+      }
+    }
+
+    if (!empty($filtro['venda'])) {
+
+      if ($filtro['venda'] != '') {
+
+        $where[] = "inv.inv_venda = :venda";
+      }
+    }
+
+    return $where;
+  }
+
+  private function bindWhere($filtro, &$sql)
+  {
+
+    if (!empty($filtro['id_inventario'])) {
+      $sql->bindValue(":id_inventario", $filtro['id_inventario']);
+    }
+
+    if (!empty($filtro['id_inv_situacao'])) {
+      $sql->bindValue(":id_inv_situacao", $filtro['id_inv_situacao']);
+    }
+
+    if (!empty($filtro['procedencia'])) {
+      $sql->bindValue(":procedencia", '%' . $filtro['procedencia'] . '%');
+    }
+
+    if (!empty($filtro['artista'])) {
+      if ($filtro['artista'] != '') {
+        $sql->bindValue(":art_nome", '%' . $filtro['artista'] . '%');
+      }
+    }
+
+    if (!empty($filtro['titulo'])) {
+      if ($filtro['titulo'] != '') {
+        $sql->bindValue(":inv_descricao", '%' . $filtro['titulo'] . '%');
+      }
+    }
+
+    if (!empty($filtro['venda'])) {
+      if ($filtro['venda'] != '') {
+        if ($filtro['venda'] == '2') {
+          $filtro['venda'] = '0';
+        } else {
+          $filtro['venda'] == '1';
+        }
+        $sql->bindValue(":venda", $filtro['venda']);
+      }
+    }
+  }
+
+  public function add($id_company, $id_user, $Parametros, $photo)
+  {
+    $action = 'CADASTRO';
+    $id_inv_situacao = '2';
+
+    $compra = array();
+    $situacao = array();
+
+    $visivel = isset($Parametros['visivel']) ? $Parametros['visivel'] : '1';
+    $etiqueta = isset($Parametros['etiqueta']) ? $Parametros['etiqueta'] : '1';
 
 
-        $titulo                     = controller::ReturnValor($Parametros['titulo']);
-        $assinatura                 = controller::ReturnValor($Parametros['assinatura']);
+    $titulo                     = controller::ReturnValor($Parametros['titulo']);
+    $assinatura                 = controller::ReturnValor($Parametros['assinatura']);
 
-        $id_artista                                       = ($Parametros['id_artista']);
-        $id_tecnica                                       = ($Parametros['id_tecnica']);
-        $tamanho                                          = ($Parametros['tamanho']);
-        $datado                                           =  controller::ReturnValor($Parametros['datado']);
-        $tiragem                                          =  controller::ReturnValor($Parametros['tiragem']);
-        $observacao                                       =  controller::ReturnValor($Parametros['observacao']);
-        $localizacao                                      =  controller::ReturnValor($Parametros['localizacao']);
+    $id_artista                                       = ($Parametros['id_artista']);
+    $id_tecnica                                       = ($Parametros['id_tecnica']);
+    $tamanho                                          = ($Parametros['tamanho']);
+    $datado                                           =  controller::ReturnValor($Parametros['datado']);
+    $tiragem                                          =  controller::ReturnValor($Parametros['tiragem']);
+    $observacao                                       =  controller::ReturnValor($Parametros['observacao']);
+    $localizacao                                      =  controller::ReturnValor($Parametros['localizacao']);
 
-        $compra['procedencia']                            =  controller::ReturnValor($Parametros['procedencia']);
-        $compra['data_procedencia']                       = ($Parametros['data_procedencia']);
-        $compra['preco_procedencia']                      =  controller::PriceSituation($Parametros['preco_procedencia']);
+    $compra['procedencia']                            =  controller::ReturnValor($Parametros['procedencia']);
+    $compra['data_procedencia']                       = ($Parametros['data_procedencia']);
+    $compra['preco_procedencia']                      =  controller::PriceSituation($Parametros['preco_procedencia']);
 
-        $situacao['descricao_situacao']                   =  controller::ReturnValor($Parametros['descricao_situacao']);
-        $situacao['data_situacao']                        = ($Parametros['data_situacao']);
-        $situacao['preco_situacao']                       =  controller::PriceSituation($Parametros['preco_situacao']);
-        $situacao['situacao_char']                        = ($Parametros['situacao_char']);
-        $situacao['retirada']                             =  isset($Parametros['retirada']) ? $Parametros['retirada'] : '';
-        $situacao['localizacao']                          = ($Parametros['localizacao']);
-        $situacao['leilao_codigo']                        =  controller::ReturnFormatLimpo($Parametros['leilao_codigo']);
+    $situacao['descricao_situacao']                   =  controller::ReturnValor($Parametros['descricao_situacao']);
+    $situacao['data_situacao']                        = ($Parametros['data_situacao']);
+    $situacao['preco_situacao']                       =  controller::PriceSituation($Parametros['preco_situacao']);
+    $situacao['situacao_char']                        = ($Parametros['situacao_char']);
+    $situacao['retirada']                             =  isset($Parametros['retirada']) ? strtoupper($Parametros['retirada']) : '';
+    $situacao['localizacao']                          = ($Parametros['localizacao']);
+    $situacao['leilao_codigo']                        =  controller::ReturnFormatLimpo($Parametros['leilao_codigo']);
 
 
-        try {
+    try {
 
-            $sql = $this->db->prepare("INSERT INTO inventario SET
+      $sql = $this->db->prepare("INSERT INTO inventario SET
                 id_company          = :id_company, 
                 id_tecnica          = :id_tecnica,
                 id_artista          = :id_artista, 
@@ -253,103 +285,103 @@ class Inventario extends model
 
                 ");
 
-            $sql->bindValue(':id_company',   $id_company);
-            $sql->bindValue(':id_artista',   $id_artista);
-            $sql->bindValue(':id_tecnica',   $id_tecnica);
+      $sql->bindValue(':id_company',   $id_company);
+      $sql->bindValue(':id_artista',   $id_artista);
+      $sql->bindValue(':id_tecnica',   $id_tecnica);
 
-            $sql->bindValue(':titulo',       $titulo);
-            $sql->bindValue(':assinatura',   $assinatura);
-            $sql->bindValue(':tamanho',      $tamanho);
-            $sql->bindValue(':tiragem',      $tiragem);
-            $sql->bindValue(':datado',       $datado);
-            $sql->bindValue(':id_inv',       $id_inv_situacao);
-            $sql->bindValue(':observacao',   $observacao);
-            $sql->bindValue(':localizacao',   $localizacao);
-            $sql->bindValue(':situacao_venda',   $situacao['situacao_char']);
+      $sql->bindValue(':titulo',       $titulo);
+      $sql->bindValue(':assinatura',   $assinatura);
+      $sql->bindValue(':tamanho',      $tamanho);
+      $sql->bindValue(':tiragem',      $tiragem);
+      $sql->bindValue(':datado',       $datado);
+      $sql->bindValue(':id_inv',       $id_inv_situacao);
+      $sql->bindValue(':observacao',   $observacao);
+      $sql->bindValue(':localizacao',   $localizacao);
+      $sql->bindValue(':situacao_venda',   $situacao['situacao_char']);
 
-            $sql->bindValue(':visivel',      $visivel);
-            $sql->bindValue(':etiqueta',     $etiqueta);
+      $sql->bindValue(':visivel',      $visivel);
+      $sql->bindValue(':etiqueta',     $etiqueta);
 
 
-            if ($sql->execute()) {
-                $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
-            } else {
-                $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
-            }
+      if ($sql->execute()) {
+        $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
+      } else {
+        $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
+      }
 
-            $id_product = $this->db->lastInsertId();
+      $id_product = $this->db->lastInsertId();
 
-            $this->setLog($id_product, $id_company, $id_user, $action, '', $Parametros);
+      $this->setLog($id_product, $id_company, $id_user, $action, '', $Parametros);
 
-            if (isset($compra['procedencia']) && $compra['procedencia'] != '') {
-                $this->setProcedencia($id_product, $id_company, $id_user, $compra);
-            }
+      if (isset($compra['procedencia']) && $compra['procedencia'] != '') {
+        $this->setProcedencia($id_product, $id_company, $id_user, $compra);
+      }
 
-            if (isset($situacao['descricao_situacao']) && $situacao['descricao_situacao']     != '') {
-                $this->setSituacao($id_product, $id_company, $id_user, $situacao);
-            }
+      if (isset($situacao['descricao_situacao']) && $situacao['descricao_situacao']     != '') {
+        $this->setSituacao($id_product, $id_company, $id_user, $situacao);
+      }
 
-            if (isset($photo) && $photo != '') {
+      if (isset($photo) && $photo != '') {
 
-                $this->addPhoto($id_product, $Parametros, $photo, $id_company);
-            }
-        } catch (PDOExecption $e) {
-            $sql->rollback();
-            error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
-        }
-
-        return $this->retorno;
+        $this->addPhoto($id_product, $Parametros, $photo, $id_company);
+      }
+    } catch (PDOExecption $e) {
+      $sql->rollback();
+      error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
     }
 
-    public function edit($id_company, $id_user, $Parametros, $photo, $id)
-    {
-        if(isset($Parametros['id_artista']) && $Parametros['id_artista'] != ''){
-            $id_artista = $Parametros['id_artista'];
-        }
+    return $this->retorno;
+  }
 
-        $compra = array();
-        $situacao = array();
-        $action = 'EDIÇÃO';
+  public function edit($id_company, $id_user, $Parametros, $photo, $id)
+  {
+    if (isset($Parametros['id_artista']) && $Parametros['id_artista'] != '') {
+      $id_artista = $Parametros['id_artista'];
+    }
 
-        $id_tecnica                                       = ($Parametros['id_tecnica']);
-        $titulo                                           =  controller::ReturnValor($Parametros['titulo']);
-        $assinatura                                       =  controller::ReturnValor($Parametros['assinatura']);
-        $tamanho                                          =  controller::ReturnValor($Parametros['tamanho']);
-        $datado                                           =  controller::ReturnValor($Parametros['datado']);
-        $tiragem                                          = ($Parametros['tiragem']);
-        $observacao                                       =  controller::ReturnValor($Parametros['observacao']);
-        $price_venda = isset($Parametros['preco']) ? controller::PriceSituation($Parametros['preco']) : '';
-        $localizacao = isset($Parametros['localizacao']) ? $Parametros['localizacao'] : '';
+    $compra = array();
+    $situacao = array();
+    $action = 'EDIÇÃO';
 
-        //PROCEDENCIA DA OBRA
-        $compra['procedencia']                            =  controller::ReturnValor($Parametros['procedencia']);
-        $compra['data_procedencia']                       = ($Parametros['data_procedencia']);
-        $compra['preco_procedencia']                      =  controller::PriceSituation($Parametros['preco_procedencia']);
+    $id_tecnica                                       = ($Parametros['id_tecnica']);
+    $titulo                                           =  controller::ReturnValor($Parametros['titulo']);
+    $assinatura                                       =  controller::ReturnValor($Parametros['assinatura']);
+    $tamanho                                          =  controller::ReturnValor($Parametros['tamanho']);
+    $datado                                           =  controller::ReturnValor($Parametros['datado']);
+    $tiragem                                          = ($Parametros['tiragem']);
+    $observacao                                       =  controller::ReturnValor($Parametros['observacao']);
+    $price_venda = isset($Parametros['preco']) ? controller::PriceSituation($Parametros['preco']) : '';
+    $localizacao = isset($Parametros['localizacao']) ? $Parametros['localizacao'] : '';
 
-        //SITUACAO DA OBRA
-        $situacao['descricao_situacao']                   =  controller::ReturnValor($Parametros['descricao_situacao']);
-        $situacao['data_situacao']                        = ($Parametros['data_situacao']);
-        $situacao['preco_situacao']                       =  controller::PriceSituation($Parametros['preco_situacao']);
-        $situacao['situacao_char']                        = ($Parametros['situacao_char']);
-        $situacao['retirada'] = isset($Parametros['retirada']) ? $Parametros['retirada'] : '';
-        $situacao['leilao_codigo']                        =  controller::ReturnFormatLimpo($Parametros['leilao_codigo']);
+    //PROCEDENCIA DA OBRA
+    $compra['procedencia']                            =  controller::ReturnValor($Parametros['procedencia']);
+    $compra['data_procedencia']                       = ($Parametros['data_procedencia']);
+    $compra['preco_procedencia']                      =  controller::PriceSituation($Parametros['preco_procedencia']);
 
-        
+    //SITUACAO DA OBRA
+    $situacao['descricao_situacao']                   =  controller::ReturnValor($Parametros['descricao_situacao']);
+    $situacao['data_situacao']                        = ($Parametros['data_situacao']);
+    $situacao['preco_situacao']                       =  controller::PriceSituation($Parametros['preco_situacao']);
+    $situacao['situacao_char']                        = ($Parametros['situacao_char']);
+    $situacao['retirada']                             = isset($Parametros['retirada']) ? strtoupper($Parametros['retirada']) : '';
+    $situacao['leilao_codigo']                        =  controller::ReturnFormatLimpo($Parametros['leilao_codigo']);
 
-        //SITUACAO DA OBRA (EDIÇÃO)
-        if (!empty($Parametros['edit_situacao'])) {
 
-            $situacaoEdit['edit_situacao']                        =  controller::ReturnValor($Parametros['edit_situacao']);
-            $situacaoEdit['edit_data_situacao']                   = ($Parametros['edit_data_situacao']);
-            $situacaoEdit['edit_preco_situacao'] = !empty($Parametros['edit_preco_situacao']) ? controller::PriceSituation($Parametros['edit_preco_situacao']) : '';
-            $situacaoEdit['edit_venda_situacao']                  = ($Parametros['edit_venda_situacao']);
-            $situacaoEdit['id_situacao']                          = ($Parametros['id_situacao']);
-            $situacaoEdit['edit_retirada']                        = ($Parametros['edit_retirada']);
-        }
 
-        try {
+    //SITUACAO DA OBRA (EDIÇÃO)
+    if (!empty($Parametros['edit_situacao'])) {
 
-            $sql = $this->db->prepare("UPDATE inventario SET
+      $situacaoEdit['edit_situacao']                        =  controller::ReturnValor($Parametros['edit_situacao']);
+      $situacaoEdit['edit_data_situacao']                   = ($Parametros['edit_data_situacao']);
+      $situacaoEdit['edit_preco_situacao'] = !empty($Parametros['edit_preco_situacao']) ? controller::PriceSituation($Parametros['edit_preco_situacao']) : '';
+      $situacaoEdit['edit_venda_situacao']                  = ($Parametros['edit_venda_situacao']);
+      $situacaoEdit['id_situacao']                          = ($Parametros['id_situacao']);
+      $situacaoEdit['edit_retirada']                        = strtoupper($Parametros['edit_retirada']);
+    }
+
+    try {
+
+      $sql = $this->db->prepare("UPDATE inventario SET
                 
                 id_company          = :id_company, 
                 id_tecnica          = :id_tecnica, 
@@ -367,62 +399,61 @@ class Inventario extends model
 
             ");
 
-            $sql->bindValue(':id_company',   $id_company);
+      $sql->bindValue(':id_company',   $id_company);
 
-            $sql->bindValue(':id',           $id);
-            $sql->bindValue(':id_tecnica',   $id_tecnica);
-            $sql->bindValue(':titulo',       $titulo);
-            $sql->bindValue(':assinatura',   $assinatura);
-            $sql->bindValue(':tamanho',      $tamanho);
-            $sql->bindValue(':tiragem',      $tiragem);
-            $sql->bindValue(':datado',       $datado);
-            $sql->bindValue(':observacao',   $observacao);
-            $sql->bindValue(':localizacao',   $localizacao);
-            $sql->bindValue(':price_venda',   $price_venda);
-            $sql->bindValue(':situacao_venda',   $situacao['situacao_char']);
+      $sql->bindValue(':id',           $id);
+      $sql->bindValue(':id_tecnica',   $id_tecnica);
+      $sql->bindValue(':titulo',       $titulo);
+      $sql->bindValue(':assinatura',   $assinatura);
+      $sql->bindValue(':tamanho',      $tamanho);
+      $sql->bindValue(':tiragem',      $tiragem);
+      $sql->bindValue(':datado',       $datado);
+      $sql->bindValue(':observacao',   $observacao);
+      $sql->bindValue(':localizacao',   $localizacao);
+      $sql->bindValue(':price_venda',   $price_venda);
+      $sql->bindValue(':situacao_venda',   $situacao['situacao_char']);
 
-            if ($sql->execute()) {
-                $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
-            } else {
-                $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
-            }
+      if ($sql->execute()) {
+        $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
+      } else {
+        $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
+      }
 
-            $this->setLog($id, $id_company, $id_user, $action, $compra['preco_procedencia'], $Parametros);
+      $this->setLog($id, $id_company, $id_user, $action, $compra['preco_procedencia'], $Parametros);
 
-            if (isset($compra['procedencia']) && $compra['procedencia'] != '') {
-                $this->setEditarProcedencia($id, $id_company, $id_user, $compra);
-            }
+      if (isset($compra['procedencia']) && $compra['procedencia'] != '') {
+        $this->setEditarProcedencia($id, $id_company, $id_user, $compra);
+      }
 
-            if (isset($situacaoEdit['edit_situacao']) && $situacaoEdit['edit_data_situacao']  != '') {
-                $this->setEditarSituacao($id, $id_company, $id_user, $situacaoEdit);
-            }
+      if (isset($situacaoEdit['edit_situacao']) && $situacaoEdit['edit_data_situacao']  != '') {
+        $this->setEditarSituacao($id, $id_company, $id_user, $situacaoEdit);
+      }
 
-            if (isset($situacao['descricao_situacao']) && $situacao['descricao_situacao']     != '') {
-                $this->setSituacao($id, $id_company, $id_user, $situacao);
-            }
+      if (isset($situacao['descricao_situacao']) && $situacao['descricao_situacao']     != '') {
+        $this->setSituacao($id, $id_company, $id_user, $situacao);
+      }
 
-            if (isset($photo) && $photo != null) {
-                $this->addPhoto($id, $Parametros, $photo, $id_company);
-            }
+      if (isset($photo) && $photo != null) {
+        $this->addPhoto($id, $Parametros, $photo, $id_company);
+      }
 
-            /* if(isset($situacao['descricao_situacao']) && $situacao['descricao_situacao'] == 'Mercado livre'){
+      /* if(isset($situacao['descricao_situacao']) && $situacao['descricao_situacao'] == 'Mercado livre'){
                 if(isset($situacao['preco_situacao']) && $situacao['preco_situacao'] != ''){
                     $this->updatePriceMercadolivre($id, $Parametros);
                 }
             }*/
-            
-        } catch (PDOExecption $e) {
-            $sql->rollback();
-            error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
-        }
-
-        return $this->retorno;
+    } catch (PDOExecption $e) {
+      $sql->rollback();
+      error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
     }
 
-    public function setProcedencia($id_product, $id_company, $id_user, $compra)
-    {
+    return $this->retorno;
+  }
 
-        $sql = $this->db->prepare("INSERT INTO procedencia SET 
+  public function setProcedencia($id_product, $id_company, $id_user, $compra)
+  {
+
+    $sql = $this->db->prepare("INSERT INTO procedencia SET 
 
             id_company             = :id_company, 
             id_inventario          = :id_product, 
@@ -433,20 +464,20 @@ class Inventario extends model
 
             ");
 
-        $sql->bindValue(":id_company",          $id_company);
-        $sql->bindValue(":id_product",          $id_product);
-        $sql->bindValue(":id_user",             $id_user);
-        $sql->bindValue(":inventario_preco",    $compra['preco_procedencia']);
-        $sql->bindValue(":descricao_compra",    trim($compra['procedencia']));
-        $sql->bindValue(":data_compra",         $compra['data_procedencia']);
+    $sql->bindValue(":id_company",          $id_company);
+    $sql->bindValue(":id_product",          $id_product);
+    $sql->bindValue(":id_user",             $id_user);
+    $sql->bindValue(":inventario_preco",    $compra['preco_procedencia']);
+    $sql->bindValue(":descricao_compra",    trim($compra['procedencia']));
+    $sql->bindValue(":data_compra",         $compra['data_procedencia']);
 
-        $sql->execute();
-    }
+    $sql->execute();
+  }
 
-    public function setSituacao($id_product, $id_company, $id_user, $situacao)
-    {
+  public function setSituacao($id_product, $id_company, $id_user, $situacao)
+  {
 
-        $sql = $this->db->prepare("INSERT INTO situacao_obra SET 
+    $sql = $this->db->prepare("INSERT INTO situacao_obra SET 
 
             id_company             = :id_company, 
             id_inventario          = :id_product, 
@@ -461,25 +492,45 @@ class Inventario extends model
 
             ");
 
-        $sql->bindValue(":id_company",          $id_company);
-        $sql->bindValue(":id_product",          $id_product);
-        $sql->bindValue(":id_user",             $id_user);
-        $sql->bindValue(":preco_situacao",      $situacao['preco_situacao']);
-        $sql->bindValue(":descricao_situacao",  trim($situacao['descricao_situacao']));
-        $sql->bindValue(":data_situacao",       $situacao['data_situacao']);
-        $sql->bindValue(":situacao_char",       $situacao['situacao_char']);
-        $sql->bindValue(":retirada",            $situacao['retirada']);
-        $sql->bindValue(":localizacao",         $situacao['localizacao']);
-        $sql->bindValue(":codigo",              $situacao['leilao_codigo']);
+    $sql->bindValue(":id_company",          $id_company);
+    $sql->bindValue(":id_product",          $id_product);
+    $sql->bindValue(":id_user",             $id_user);
+    $sql->bindValue(":preco_situacao",      $situacao['preco_situacao']);
+    $sql->bindValue(":descricao_situacao",  trim($situacao['descricao_situacao']));
+    $sql->bindValue(":data_situacao",       $situacao['data_situacao']);
+    $sql->bindValue(":situacao_char",       $situacao['situacao_char']);
+    $sql->bindValue(":retirada",            $situacao['retirada']);
+    $sql->bindValue(":localizacao",         $situacao['localizacao']);
+    $sql->bindValue(":codigo",              $situacao['leilao_codigo']);
 
-        $sql->execute();
+    $sql->execute();
+
+    
+    try {
+
+      $sql = $this->db->prepare("UPDATE inventario SET
+
+                inv_venda           = :situacao_venda
+
+                WHERE id_inventario = :id_inventario AND id_company = :id_company;
+                ");
+
+      $sql->bindValue(':id_company',       $id_company);
+      $sql->bindValue(':id_inventario',    $id_product);
+      $sql->bindValue(':situacao_venda',   $situacao['edit_venda_situacao']);
+
+      $sql->execute();
+    } catch (PDOExecption $e) {
+      $sql->rollback();
+      error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
     }
+  }
 
-    public function updatePriceMercadolivre($id_product, $Parametros)
-    {
+  public function updatePriceMercadolivre($id_product, $Parametros)
+  {
 
 
-        $sql = $this->db->prepare("UPDATE inventario SET 
+    $sql = $this->db->prepare("UPDATE inventario SET 
 
             inv_price_venda = :inv_price_venda
 
@@ -487,21 +538,21 @@ class Inventario extends model
 
             ");
 
-        $sql->bindValue(":id_product",          $id_product);
-        $sql->bindValue(":inv_price_venda",     $Parametros['preco_situacao']);
+    $sql->bindValue(":id_product",          $id_product);
+    $sql->bindValue(":inv_price_venda",     $Parametros['preco_situacao']);
 
 
 
-        $sql->execute();
-    }
+    $sql->execute();
+  }
 
 
-    public function setEditarSituacao($id_product, $id_company, $id_user, $situacao)
-    {
+  public function setEditarSituacao($id_product, $id_company, $id_user, $situacao)
+  {
 
-        $id_situacao = $situacao['id_situacao'];
+    $id_situacao = $situacao['id_situacao'];
 
-        $sql = $this->db->prepare("UPDATE situacao_obra SET 
+    $sql = $this->db->prepare("UPDATE situacao_obra SET 
 
             id_company             = :id_company,  
             id_user                = :id_user, 
@@ -515,57 +566,57 @@ class Inventario extends model
 
             ");
 
-        $sql->bindValue(":id_company",          $id_company);
-        $sql->bindValue(":id_situacao",         $id_situacao);
-        $sql->bindValue(":id_user",             $id_user);
-        $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
-        $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
-        $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
-        $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
-        $sql->bindValue(":retirada",            $situacao['edit_retirada']);
+    $sql->bindValue(":id_company",          $id_company);
+    $sql->bindValue(":id_situacao",         $id_situacao);
+    $sql->bindValue(":id_user",             $id_user);
+    $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
+    $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
+    $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
+    $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
+    $sql->bindValue(":retirada",            $situacao['edit_retirada']);
 
 
-        $sql->execute();
+    $sql->execute();
 
 
-        try {
+    try {
 
-            $sql = $this->db->prepare("UPDATE inventario SET
+      $sql = $this->db->prepare("UPDATE inventario SET
 
                 inv_venda           = :situacao_venda
 
                 WHERE id_inventario = :id_inventario AND id_company = :id_company;
                 ");
 
-            $sql->bindValue(':id_company',       $id_company);
-            $sql->bindValue(':id_inventario',    $id_product);
-            $sql->bindValue(':situacao_venda',   $situacao['edit_venda_situacao']);
+      $sql->bindValue(':id_company',       $id_company);
+      $sql->bindValue(':id_inventario',    $id_product);
+      $sql->bindValue(':situacao_venda',   $situacao['edit_venda_situacao']);
 
-            $sql->execute();
-        } catch (PDOExecption $e) {
-            $sql->rollback();
-            error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
-        }
+      $sql->execute();
+    } catch (PDOExecption $e) {
+      $sql->rollback();
+      error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
     }
+  }
 
-    public function setEditarProcedencia($id_product, $id_company, $id_user, $compra)
-    {
+  public function setEditarProcedencia($id_product, $id_company, $id_user, $compra)
+  {
 
 
-        $compra['preco_procedencia'] = str_replace('R$', '', $compra['preco_procedencia']);
-        $compra['preco_procedencia'] = explode(',', $compra['preco_procedencia']);
-        $compra['preco_procedencia'] = str_replace('.', '', $compra['preco_procedencia']);
+    $compra['preco_procedencia'] = str_replace('R$', '', $compra['preco_procedencia']);
+    $compra['preco_procedencia'] = explode(',', $compra['preco_procedencia']);
+    $compra['preco_procedencia'] = str_replace('.', '', $compra['preco_procedencia']);
 
-        $sql = $this->db->prepare(
+    $sql = $this->db->prepare(
 
-            "SELECT * FROM procedencia WHERE id_inventario = :id_product "
-        );
+      "SELECT * FROM procedencia WHERE id_inventario = :id_product "
+    );
 
-        $sql->bindValue(":id_product", $id_product);
-        $sql->execute();
+    $sql->bindValue(":id_product", $id_product);
+    $sql->execute();
 
-        if ($sql->rowCount() > 0) {
-            $sql = $this->db->prepare("UPDATE procedencia SET 
+    if ($sql->rowCount() > 0) {
+      $sql = $this->db->prepare("UPDATE procedencia SET 
 
                 id_company             = :id_company, 
                 id_inventario          = :id_product, 
@@ -578,16 +629,16 @@ class Inventario extends model
 
                 ");
 
-            $sql->bindValue(":id_company",          $id_company);
-            $sql->bindValue(":id_product",          $id_product);
-            $sql->bindValue(":id_user",             $id_user);
-            $sql->bindValue(":inventario_preco",    $compra['preco_procedencia'][0]);
-            $sql->bindValue(":descricao_compra",    trim($compra['procedencia']));
-            $sql->bindValue(":data_compra",         $compra['data_procedencia']);
+      $sql->bindValue(":id_company",          $id_company);
+      $sql->bindValue(":id_product",          $id_product);
+      $sql->bindValue(":id_user",             $id_user);
+      $sql->bindValue(":inventario_preco",    $compra['preco_procedencia'][0]);
+      $sql->bindValue(":descricao_compra",    trim($compra['procedencia']));
+      $sql->bindValue(":data_compra",         $compra['data_procedencia']);
 
-            $sql->execute();
-        } else {
-            $sql = $this->db->prepare("INSERT INTO procedencia SET 
+      $sql->execute();
+    } else {
+      $sql = $this->db->prepare("INSERT INTO procedencia SET 
 
                 id_company             = :id_company, 
                 id_inventario          = :id_product, 
@@ -598,23 +649,23 @@ class Inventario extends model
 
                 ");
 
-            $sql->bindValue(":id_company",          $id_company);
-            $sql->bindValue(":id_product",          $id_product);
-            $sql->bindValue(":id_user",             $id_user);
-            $sql->bindValue(":inventario_preco",    $compra['preco_procedencia'][0]);
-            $sql->bindValue(":descricao_compra",    $compra['procedencia']);
-            $sql->bindValue(":data_compra",         $compra['data_procedencia']);
+      $sql->bindValue(":id_company",          $id_company);
+      $sql->bindValue(":id_product",          $id_product);
+      $sql->bindValue(":id_user",             $id_user);
+      $sql->bindValue(":inventario_preco",    $compra['preco_procedencia'][0]);
+      $sql->bindValue(":descricao_compra",    $compra['procedencia']);
+      $sql->bindValue(":data_compra",         $compra['data_procedencia']);
 
-            $sql->execute();
-        }
+      $sql->execute();
     }
+  }
 
-    public function setLog($id_product, $id_company, $id_user, $action, $compra, $Parametros)
-    {
+  public function setLog($id_product, $id_company, $id_user, $action, $compra, $Parametros)
+  {
 
-        $action = $action . ' - ' . $compra;
+    $action = $action . ' - ' . $compra;
 
-        $sql = $this->db->prepare("INSERT INTO inventario_log 
+    $sql = $this->db->prepare("INSERT INTO inventario_log 
             SET id_company = :id_company, 
             id_inventario = :id_product, 
             id_user = :id_user, 
@@ -622,27 +673,27 @@ class Inventario extends model
             date_action = NOW()
             ");
 
-        $sql->bindValue(":id_company", $id_company);
-        $sql->bindValue(":id_product", $id_product);
-        $sql->bindValue(":id_user", $id_user);
-        $sql->bindValue(":action", $action);
-        $sql->execute();
+    $sql->bindValue(":id_company", $id_company);
+    $sql->bindValue(":id_product", $id_product);
+    $sql->bindValue(":id_user", $id_user);
+    $sql->bindValue(":action", $action);
+    $sql->execute();
 
-        $compra = array();
-        $situacao = array();
+    $compra = array();
+    $situacao = array();
 
-        $titulo                     = controller::ReturnValor($Parametros['titulo']);
-        $assinatura                 = controller::ReturnValor($Parametros['assinatura']);
+    $titulo                     = controller::ReturnValor($Parametros['titulo']);
+    $assinatura                 = controller::ReturnValor($Parametros['assinatura']);
 
-        $id_artista                                       = ($Parametros['id_artista']);
-        $id_tecnica                                       = ($Parametros['id_tecnica']);
-        $tamanho                                          = ($Parametros['tamanho']);
-        $datado                                           =  controller::ReturnValor($Parametros['datado']);
-        $tiragem                                          =  controller::ReturnValor($Parametros['tiragem']);
-        $observacao                                       =  controller::ReturnValor($Parametros['observacao']);
-        $localizacao                                      =  controller::ReturnValor($Parametros['localizacao']);
+    $id_artista                                       = ($Parametros['id_artista']);
+    $id_tecnica                                       = ($Parametros['id_tecnica']);
+    $tamanho                                          = ($Parametros['tamanho']);
+    $datado                                           =  controller::ReturnValor($Parametros['datado']);
+    $tiragem                                          =  controller::ReturnValor($Parametros['tiragem']);
+    $observacao                                       =  controller::ReturnValor($Parametros['observacao']);
+    $localizacao                                      =  controller::ReturnValor($Parametros['localizacao']);
 
-        $sql = $this->db->prepare("INSERT INTO inventario_set_log SET
+    $sql = $this->db->prepare("INSERT INTO inventario_set_log SET
             id_company          = :id_company, 
             id_tecnica          = :id_tecnica,
             id_artista          = :id_artista, 
@@ -659,228 +710,264 @@ class Inventario extends model
 
             ");
 
-        $sql->bindValue(':id_company',   $id_company);
-        $sql->bindValue(':id_artista',   $id_artista);
-        $sql->bindValue(':id_tecnica',   $id_tecnica);
+    $sql->bindValue(':id_company',   $id_company);
+    $sql->bindValue(':id_artista',   $id_artista);
+    $sql->bindValue(':id_tecnica',   $id_tecnica);
 
-        $sql->bindValue(':titulo',          $titulo);
-        $sql->bindValue(':assinatura',      $assinatura);
-        $sql->bindValue(':tamanho',         $tamanho);
-        $sql->bindValue(':tiragem',         $tiragem);
-        $sql->bindValue(':datado',          $datado);
-        $sql->bindValue(':id_inv',          $id_inv_situacao);
-        $sql->bindValue(':observacao',      $observacao);
-        $sql->bindValue(':localizacao',     $localizacao);
-        $sql->bindValue(':situacao_venda',   $situacao['situacao_char']);
+    $sql->bindValue(':titulo',          $titulo);
+    $sql->bindValue(':assinatura',      $assinatura);
+    $sql->bindValue(':tamanho',         $tamanho);
+    $sql->bindValue(':tiragem',         $tiragem);
+    $sql->bindValue(':datado',          $datado);
+    $sql->bindValue(':id_inv',          $id_inv_situacao);
+    $sql->bindValue(':observacao',      $observacao);
+    $sql->bindValue(':localizacao',     $localizacao);
+    $sql->bindValue(':situacao_venda',   $situacao['situacao_char']);
 
-        $sql->execute();
-    }
+    $sql->execute();
+  }
 
-    private function addphoto($id_product, $Parametros, $photo, $id_company)
-    {
+  private function addphoto($id_product, $Parametros, $photo, $id_company)
+  {
 
-        $artista = array();
+    $artista = array();
 
-        $id_anuncio = $id_product;
+    $id_anuncio = $id_product;
 
-        $artista = $this->artista->getNameArtistaById($Parametros['id_artista'], $id_company);
+    $artista = $this->artista->getNameArtistaById($Parametros['id_artista'], $id_company);
 
-        $artistaName = $artista[0]['art_nome'];
+    $artistaName = $artista[0]['art_nome'];
 
-        $artista_name = $artistaName;
-        $artista = str_replace(' ', '_', $artista_name);
+    $artista_name = $artistaName;
+    $artista = str_replace(' ', '_', $artista_name);
 
-        $param = isset($Parametros['leilao_codigo_foto']) ? $Parametros['leilao_codigo_foto'] : '';
+    $param = isset($Parametros['leilao_codigo_foto']) ? $Parametros['leilao_codigo_foto'] : '';
 
-        if (!empty($param) && $param != '') {
+    if (!empty($param) && $param != '') {
 
 
-            $string = $param;
-            $array = str_split($string, 4);
-            $novaString = implode("-", $array);
-            $tmpname = $novaString . '.jpg';
+      $string = $param;
+      $array = str_split($string, 4);
+      $novaString = implode("-", $array);
+      $tmpname = $novaString . '.jpg';
 
-            $imgurl = 'https://www.tableau.com.br/leilao/' . $tmpname;
+      $imgurl = 'https://www.tableau.com.br/leilao/' . $tmpname;
 
-            if (is_dir("assets/images/anuncios/" . $artista)) {
-                $link   = 'assets/images/anuncios/' . $artista . '/' . $tmpname;
-            } else {
-                mkdir("assets/images/anuncios/" . $artista);
-                $link   = 'assets/images/anuncios/' . $artista . '/' . $tmpname;
-            }
+      if (is_dir("assets/images/anuncios/" . $artista)) {
+        $link   = 'assets/images/anuncios/' . $artista . '/' . $tmpname;
+      } else {
+        mkdir("assets/images/anuncios/" . $artista);
+        $link   = 'assets/images/anuncios/' . $artista . '/' . $tmpname;
+      }
 
-            if (!@copy($imgurl, $link)) {
-                $errors = error_get_last();
-                echo "COPY ERROR: " . $errors['type'];
-                echo "<br />\n" . $errors['message'];
-            } else { }
+      if (!@copy($imgurl, $link)) {
+        $errors = error_get_last();
+        echo "COPY ERROR: " . $errors['type'];
+        echo "<br />\n" . $errors['message'];
+      } else { }
 
-            $sql = $this->db->prepare("INSERT INTO inventario_image (id_inventario,url)
+      $sql = $this->db->prepare("INSERT INTO inventario_image (id_inventario,url)
                 VALUES (:id_inventario, :url)
                 ");
+      $sql->bindValue(":id_inventario", $id_anuncio);
+      $sql->bindValue(":url", $tmpname);
+      $sql->execute();
+    }
+
+    if (isset($photo)) {
+      if (count($photo) > 0) {
+        for ($q = 0; $q < count($photo['tmp_name']); $q++) {
+
+          $tipo = $photo['type'][$q];
+
+          if (in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))) {
+
+            $Parametros['titulo'] = str_replace(' ', '_', $Parametros['titulo']);
+
+            $Parametros['titulo'] = preg_replace("/[áàâãä]/", "a", $Parametros['titulo']);
+
+            $Parametros['titulo'] = lcfirst($Parametros['titulo']);
+
+            $tmpname = md5(time() . rand(0, 999)) . '.jpg';
+            /*$tmpname = $id_anuncio.'.jpg';*/
+
+            if (is_dir("assets/images/anuncios/" . $artista)) {
+              move_uploaded_file($photo['tmp_name'][$q], 'assets/images/anuncios/' . $artista . '/' . $tmpname);
+            } else {
+              mkdir("assets/images/anuncios/" . $artista);
+              move_uploaded_file($photo['tmp_name'][$q], 'assets/images/anuncios/' . $artista . '/' . $tmpname);
+            }
+
+            list($width_orig, $height_orig) = getimagesize('assets/images/anuncios/' . $artista . '/' . $tmpname);
+            $ratio = $width_orig / $height_orig;
+
+            $width = 1000;
+            $height = 1000;
+
+            if ($width / $height > $ratio) {
+              $width = $height * $ratio;
+            } else {
+              $height = $width / $ratio;
+            }
+
+            $img = imagecreatetruecolor($width, $height);
+            if ($tipo == 'image/jpeg') {
+              $origi = imagecreatefromjpeg('assets/images/anuncios/' . $artista . '/' . $tmpname);
+            } elseif ($tipo == 'image/png') {
+              $origi = imagecreatefrompng('assets/images/anuncios/' . $artista . '/' . $tmpname);
+            }
+
+            imagecopyresampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+
+            $imgag = imagejpeg($img, 'assets/images/anuncios/' . $artista . '/' . $tmpname, 80);
+
+            $sql = $this->db->prepare("INSERT INTO inventario_image (id_inventario,url)
+                            VALUES (:id_inventario, :url)
+                            ");
             $sql->bindValue(":id_inventario", $id_anuncio);
             $sql->bindValue(":url", $tmpname);
             $sql->execute();
+          }
         }
+      }
+    } else {
 
-        if (isset($photo)) {
-            if (count($photo) > 0) {
-                for ($q = 0; $q < count($photo['tmp_name']); $q++) {
+      error_log(print_r('erro na foto', 1));
+    }
+  }
 
-                    $tipo = $photo['type'][$q];
+  public function getImagesByProductId($id)
+  {
+    $sql = "SELECT id_image,url FROM inventario_image WHERE id_inventario = :id ORDER BY id_image LIMIT 1 ";
+    $sql = $this->db->prepare($sql);
+    $sql->bindValue(":id", $id);
+    $sql->execute();
 
-                    if (in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))) {
-
-                        $Parametros['titulo'] = str_replace(' ', '_', $Parametros['titulo']);
-
-                        $Parametros['titulo'] = preg_replace("/[áàâãä]/", "a", $Parametros['titulo']);
-
-                        $Parametros['titulo'] = lcfirst($Parametros['titulo']);
-
-                        $tmpname = md5(time() . rand(0, 999)) . '.jpg';
-                        /*$tmpname = $id_anuncio.'.jpg';*/
-
-                        if (is_dir("assets/images/anuncios/" . $artista)) {
-                            move_uploaded_file($photo['tmp_name'][$q], 'assets/images/anuncios/' . $artista . '/' . $tmpname);
-                        } else {
-                            mkdir("assets/images/anuncios/" . $artista);
-                            move_uploaded_file($photo['tmp_name'][$q], 'assets/images/anuncios/' . $artista . '/' . $tmpname);
-                        }
-
-                        list($width_orig, $height_orig) = getimagesize('assets/images/anuncios/' . $artista . '/' . $tmpname);
-                        $ratio = $width_orig / $height_orig;
-
-                        $width = 500;
-                        $height = 500;
-
-                        if ($width / $height > $ratio) {
-                            $width = $height * $ratio;
-                        } else {
-                            $height = $width / $ratio;
-                        }
-
-                        $img = imagecreatetruecolor($width, $height);
-                        if ($tipo == 'image/jpeg') {
-                            $origi = imagecreatefromjpeg('assets/images/anuncios/' . $artista . '/' . $tmpname);
-                        } elseif ($tipo == 'image/png') {
-                            $origi = imagecreatefrompng('assets/images/anuncios/' . $artista . '/' . $tmpname);
-                        }
-
-                        imagecopyresampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-
-                        $imgag = imagejpeg($img, 'assets/images/anuncios/' . $artista . '/' . $tmpname, 80);
-
-                        $sql = $this->db->prepare("INSERT INTO inventario_image (id_inventario,url)
-                            VALUES (:id_inventario, :url)
-                            ");
-                        $sql->bindValue(":id_inventario", $id_anuncio);
-                        $sql->bindValue(":url", $tmpname);
-                        $sql->execute();
-                    }
-                }
-            }
-        } else {
-
-            error_log(print_r('erro na foto', 1));
-        }
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetch();
     }
 
-    public function getImagesByProductId($id)
-    {
-        $sql = "SELECT id_image,url FROM inventario_image WHERE id_inventario = :id LIMIT 1 ";
-        $sql = $this->db->prepare($sql);
-        $sql->bindValue(":id", $id);
-        $sql->execute();
+    return $this->array;
+  }
 
-        if ($sql->rowCount() > 0) {
-            $this->array = $sql->fetch();
-        }
+  public function getLucro($id)
+  {
+    $sql = "
+      SELECT preco_situacao, situacao_char, inventario_preco FROM situacao_obra sit
+        INNER JOIN inventario inv ON (inv.id_inventario = sit.id_inventario)
+        INNER JOIN procedencia pro ON (pro.id_inventario = inv.id_inventario)
+      WHERE sit.id_inventario = :id AND sit.situacao_char = '1'";
+    $sql = $this->db->prepare($sql);
+    $sql->bindValue(":id", $id);
+    $sql->execute();
 
-        return $this->array;
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetch();
     }
 
-    public function getImagesByProduct($id)
-    {
-        $sql = "SELECT id_image,url FROM inventario_image WHERE id_inventario = :id  ";
-        $sql = $this->db->prepare($sql);
-        $sql->bindValue(":id", $id);
-        $sql->execute();
+    return $this->array;
+  }
 
-        if ($sql->rowCount() > 0) {
-            $this->array = $sql->fetchAll();
-        }
+  public function getleilaoON($id)
+  {
+    $sql = "
+      SELECT retirada, situacao_char, id_inventario FROM situacao_obra sit
+      WHERE sit.id_inventario = :id AND sit.situacao_char = '0' AND retirada <> :retirada";
+    $sql = $this->db->prepare($sql);
+    $sql->bindValue(":id", $id);
+    $sql->bindValue(":retirada", 'OK');
 
-        return $this->array;
+    $sql->execute();
+
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetch();
     }
 
-    public function getHistorico($id_inventario, $orderBY)
-    {
+    return $this->array;
+  }
 
-        $array = array();
+  public function getImagesByProduct($id)
+  {
+    $sql = "SELECT id_image,url FROM inventario_image WHERE id_inventario = :id  ";
+    $sql = $this->db->prepare($sql);
+    $sql->bindValue(":id", $id);
+    $sql->execute();
 
-        $sql = $this->db->prepare("SELECT * 
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetchAll();
+    }
+
+    return $this->array;
+  }
+
+  public function getHistorico($id_inventario, $orderBY)
+  {
+
+    $array = array();
+
+    $sql = $this->db->prepare("SELECT * 
             FROM  situacao_obra sit
             WHERE sit.id_inventario = :id ORDER BY sit.id_situacao" . $orderBY);
 
-        $sql->bindValue(':id', $id_inventario);
+    $sql->bindValue(':id', $id_inventario);
 
-        $sql->execute();
+    $sql->execute();
 
 
-        if ($sql->rowCount() > 0) {
-            $array = $sql->fetchALL();
-        }
-
-        return $array;
+    if ($sql->rowCount() > 0) {
+      $array = $sql->fetchALL();
     }
 
-    public function getInventarioById($id_inventario, $id_company)
-    {
+    return $array;
+  }
 
-        $sql = $this->db->prepare("SELECT * FROM inventario inv
+  public function getInventarioById($id_inventario, $id_company)
+  {
+
+    $sql = $this->db->prepare("SELECT * FROM inventario inv
 
             INNER JOIN artista  art ON (inv.id_artista = art.id_artista) 
             INNER JOIN tecnica tec ON (tec.id_tecnica = inv.id_tecnica) 
 
             WHERE inv.id_company = :id_company AND inv.id_inventario = :id_inventario");
 
-        $sql->bindValue(':id_company', $id_company);
-        $sql->bindValue(':id_inventario', $id_inventario);
-        $sql->execute();
+    $sql->bindValue(':id_company', $id_company);
+    $sql->bindValue(':id_inventario', $id_inventario);
+    $sql->execute();
 
-        if ($sql->rowCount() > 0) {
-            $this->array = $sql->fetchAll();
-        }
-
-        return $this->array;
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetchAll();
     }
 
-    public function getSituacaoByOK($id_inventario)
-    {
+    return $this->array;
+  }
 
-        $sql = $this->db->prepare("SELECT 
+  public function getSituacaoByOK($id_inventario)
+  {
+
+    $sql = $this->db->prepare("SELECT 
             retirada FROM situacao_obra sit
             WHERE sit.id_inventario = :id_inventario 
             ORDER BY sit.id_inventario DESC limit 1");
 
-        $sql->bindValue(':id_inventario', $id_inventario);
-        $sql->execute();
+    $sql->bindValue(':id_inventario', $id_inventario);
+    $sql->execute();
 
-        if ($sql->rowCount() > 0) {
-            $this->array = $sql->fetch();
-        }
-
-        return $this->array;
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetch();
     }
 
-    public function duplicarObra($Parametros, $id_inv_situacao)
-    {
-        $action = 'CADASTRO';
-        $Parametros['visivel'] = isset($Parametros['visivel']) ? $Parametros['visivel'] : '1';
-        $Parametros['etiqueta'] = isset($Parametros['etiqueta']) ? $Parametros['etiqueta'] : '1';
+    return $this->array;
+  }
 
-        try {
-            $sql = $this->db->prepare("INSERT INTO inventario SET
+  public function duplicarObra($Parametros, $id_inv_situacao)
+  {
+    $action = 'CADASTRO';
+    $Parametros['visivel'] = isset($Parametros['visivel']) ? $Parametros['visivel'] : '1';
+    $Parametros['etiqueta'] = isset($Parametros['etiqueta']) ? $Parametros['etiqueta'] : '1';
+
+    try {
+      $sql = $this->db->prepare("INSERT INTO inventario SET
 
                 id_company = :id_company, 
                 id_tecnica = :id_tecnica,
@@ -898,58 +985,58 @@ class Inventario extends model
 
                 ");
 
-            $sql->bindValue(':id_company',   $Parametros[0]['id_company']);
-            $sql->bindValue(':id_artista',   $Parametros[0]['id_artista']);
-            $sql->bindValue(':titulo',       ucfirst($Parametros[0]['inv_descricao']));
-            $sql->bindValue(':id_tecnica',   $Parametros[0]['id_tecnica']);
-            $sql->bindValue(':assinatura',   ucfirst($Parametros[0]['inv_assinatura']));
-            $sql->bindValue(':tamanho',      $Parametros[0]['inv_tamanho']);
-            $sql->bindValue(':tiragem',      ucfirst($Parametros[0]['inv_tiragem']));
-            $sql->bindValue(':datado',       $Parametros[0]['inv_data']);
-            $sql->bindValue(':price_venda',  $Parametros[0]['inv_price_venda']);
-            $sql->bindValue(':visivel',      $Parametros[0]['inv_visivel']);
-            $sql->bindValue(':etiqueta',     $Parametros[0]['inv_etiqueta']);
-            $sql->bindValue(':id_inv_situacao',     $id_inv_situacao);
+      $sql->bindValue(':id_company',   $Parametros[0]['id_company']);
+      $sql->bindValue(':id_artista',   $Parametros[0]['id_artista']);
+      $sql->bindValue(':titulo',       ucfirst($Parametros[0]['inv_descricao']));
+      $sql->bindValue(':id_tecnica',   $Parametros[0]['id_tecnica']);
+      $sql->bindValue(':assinatura',   ucfirst($Parametros[0]['inv_assinatura']));
+      $sql->bindValue(':tamanho',      $Parametros[0]['inv_tamanho']);
+      $sql->bindValue(':tiragem',      ucfirst($Parametros[0]['inv_tiragem']));
+      $sql->bindValue(':datado',       $Parametros[0]['inv_data']);
+      $sql->bindValue(':price_venda',  $Parametros[0]['inv_price_venda']);
+      $sql->bindValue(':visivel',      $Parametros[0]['inv_visivel']);
+      $sql->bindValue(':etiqueta',     $Parametros[0]['inv_etiqueta']);
+      $sql->bindValue(':id_inv_situacao',     $id_inv_situacao);
 
 
-            if ($sql->execute()) {
-                $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
-            } else {
-                $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
-            }
+      if ($sql->execute()) {
+        $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
+      } else {
+        $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
+      }
 
 
-            $id_product = $this->db->lastInsertId();
-        } catch (PDOExecption $e) {
-            $sql->rollback();
-            error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
-        }
-
-        return $this->retorno;
+      $id_product = $this->db->lastInsertId();
+    } catch (PDOExecption $e) {
+      $sql->rollback();
+      error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
     }
 
-    public function addImport($id_company, $Parametros, $id_user, $id_inv_situacao)
-    {
+    return $this->retorno;
+  }
 
-        $action = 'CADASTRO';
+  public function addImport($id_company, $Parametros, $id_user, $id_inv_situacao)
+  {
 
-        $compra = array();
-        $situacao = array();
+    $action = 'CADASTRO';
 
-        $visivel = isset($Parametros['visivel']) ? $Parametros['visivel'] : '1';
-        $etiqueta = isset($Parametros['etiqueta']) ? $Parametros['etiqueta'] : '1';
+    $compra = array();
+    $situacao = array();
 
-        $id_artista                                       = ($Parametros['id_artista']);
-        $id_tecnica                                       =  $Parametros['id_tecnica'];
-        $titulo                                           =  ucfirst($Parametros['titulo']);
-        $assinatura                                       =  ucfirst($Parametros['assinatura']);
-        $tamanho                                          = ($Parametros['tamanho']);
-        $datado                                           = ($Parametros['datado']);
-        /*$tiragem                                          =  ucfirst($Parametros['tiragem']); */
+    $visivel = isset($Parametros['visivel']) ? $Parametros['visivel'] : '1';
+    $etiqueta = isset($Parametros['etiqueta']) ? $Parametros['etiqueta'] : '1';
 
-        try {
+    $id_artista                                       = ($Parametros['id_artista']);
+    $id_tecnica                                       =  $Parametros['id_tecnica'];
+    $titulo                                           =  ucfirst($Parametros['titulo']);
+    $assinatura                                       =  ucfirst($Parametros['assinatura']);
+    $tamanho                                          = ($Parametros['tamanho']);
+    $datado                                           = ($Parametros['datado']);
+    /*$tiragem                                          =  ucfirst($Parametros['tiragem']); */
 
-            $sql = $this->db->prepare("INSERT INTO inventario SET
+    try {
+
+      $sql = $this->db->prepare("INSERT INTO inventario SET
                 /*id_inventario       = :id_inventario,*/
                 id_company          = :id_company, 
                 id_tecnica          = :id_tecnica,
@@ -964,58 +1051,58 @@ class Inventario extends model
                 inv_venda           = :situacao_venda
                 ");
 
-            $sql->bindValue(':id_company',   $id_company);
-            $sql->bindValue(':id_artista',   $id_artista);
-            $sql->bindValue(':id_tecnica',   $id_tecnica);
+      $sql->bindValue(':id_company',   $id_company);
+      $sql->bindValue(':id_artista',   $id_artista);
+      $sql->bindValue(':id_tecnica',   $id_tecnica);
 
-            $sql->bindValue(':titulo',       $titulo);
-            $sql->bindValue(':assinatura',   $assinatura);
-            $sql->bindValue(':tamanho',      $tamanho);
+      $sql->bindValue(':titulo',       $titulo);
+      $sql->bindValue(':assinatura',   $assinatura);
+      $sql->bindValue(':tamanho',      $tamanho);
 
-            $sql->bindValue(':datado',       $datado);
-            $sql->bindValue(':id_inv',       $id_inv_situacao);
-            $sql->bindValue(':situacao_venda',   '0');
+      $sql->bindValue(':datado',       $datado);
+      $sql->bindValue(':id_inv',       $id_inv_situacao);
+      $sql->bindValue(':situacao_venda',   '0');
 
-            $sql->bindValue(':visivel',      $visivel);
-            $sql->bindValue(':etiqueta',     $etiqueta);
-
-
-            if ($sql->execute()) {
-                $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
-            } else {
-                $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
-            }
-
-            $id_product = $this->db->lastInsertId();
-
-            if (!empty($Parametros['situacao']) && $Parametros['situacao'] == 'TA') {
-                $Parametros['descricao_situacao'] = 'Leilão Tableau';
-                $Parametros['data_situacao'] = '04/2019';
-
-                $this->setSituacao($id_product, $id_company, $id_user, $Parametros);
-                $this->addPhoto($id_product, $Parametros, $photo, $id_company);
-            }
-
-            if (!empty($Parametros['leilao_codigo_marcia']) && $Parametros['leilao_codigo_marcia'] != '') {
-                $this->addPhotoMarcia($id_product, $Parametros, $photo, $id_company);
-            }
+      $sql->bindValue(':visivel',      $visivel);
+      $sql->bindValue(':etiqueta',     $etiqueta);
 
 
+      if ($sql->execute()) {
+        $this->retorno['inventario_add']['mensagem']['sucess'] = 'sucesso';
+      } else {
+        $this->retorno['inventario_add']['mensagem']['error'] = 'erro ao cadastrar';
+      }
 
-            $this->setLog($id_product, $id_company, $id_user, $action, '', $Parametros);
-        } catch (PDOExecption $e) {
-            $sql->rollback();
-            error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
-        }
+      $id_product = $this->db->lastInsertId();
 
-        return $this->retorno;
+      if (!empty($Parametros['situacao']) && $Parametros['situacao'] == 'TA') {
+        $Parametros['descricao_situacao'] = 'Leilão Tableau';
+        $Parametros['data_situacao'] = '04/2019';
+
+        $this->setSituacao($id_product, $id_company, $id_user, $Parametros);
+        $this->addPhoto($id_product, $Parametros, $photo, $id_company);
+      }
+
+      if (!empty($Parametros['leilao_codigo_marcia']) && $Parametros['leilao_codigo_marcia'] != '') {
+        $this->addPhotoMarcia($id_product, $Parametros, $photo, $id_company);
+      }
+
+
+
+      $this->setLog($id_product, $id_company, $id_user, $action, '', $Parametros);
+    } catch (PDOExecption $e) {
+      $sql->rollback();
+      error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
     }
 
-    public function getCountObraMercadolivre()
-    {
-        $r = 0;
+    return $this->retorno;
+  }
 
-        $sql = $this->db->prepare("
+  public function getCountObraMercadolivre()
+  {
+    $r = 0;
+
+    $sql = $this->db->prepare("
             SELECT COUNT(*) as c
             FROM  situacao_obra sit
             INNER JOIN inventario inv ON (inv.id_inventario = sit.id_inventario)
@@ -1025,30 +1112,30 @@ class Inventario extends model
             ");
 
 
-        $sql->execute();
+    $sql->execute();
 
-        $row = $sql->fetch();
+    $row = $sql->fetch();
 
-        $r = $row['c'];
+    $r = $row['c'];
 
-        return $r;
+    return $r;
+  }
+
+  public function delete($id, $id_company)
+  {
+
+    $sql = $this->db->prepare("DELETE FROM inventario WHERE id_inventario = :id AND id_company = :id_company");
+    $sql->bindValue(":id", $id);
+    $sql->bindValue(":id_company", $id_company);
+    if ($sql->execute()) {
+      return true;
+      $sql = $this->db->prepare("INSERT INTO inventario_log SET id_company = :id_company, id_inventario = :id_product, action = :action, date_action = NOW()");
+      $sql->bindValue(":id_company", $id_company);
+      $sql->bindValue(":id_product", $id_product);
+      $sql->bindValue(":action", 'DELETA');
+      $sql->execute();
+    } else {
+      return false;
     }
-
-    public function delete($id, $id_company)
-    {
-
-        $sql = $this->db->prepare("DELETE FROM inventario WHERE id_inventario = :id AND id_company = :id_company");
-        $sql->bindValue(":id", $id);
-        $sql->bindValue(":id_company", $id_company);
-        if ($sql->execute()) {
-            return true;
-            $sql = $this->db->prepare("INSERT INTO inventario_log SET id_company = :id_company, id_inventario = :id_product, action = :action, date_action = NOW()");
-            $sql->bindValue(":id_company", $id_company);
-            $sql->bindValue(":id_product", $id_product);
-            $sql->bindValue(":action", 'DELETA');
-            $sql->execute();
-        } else {
-            return false;
-        }
-    }
+  }
 }

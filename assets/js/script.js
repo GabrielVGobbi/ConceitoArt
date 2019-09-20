@@ -1,4 +1,62 @@
+
+
 $(function() {
+
+
+
+    if($('.spanModalAvancer').bind('click', function(){
+
+      id_proximo = $(this).attr('data-type');
+      id_inventario = $(this).attr('id');
+      
+      $('#modalVisualizar'+id_inventario).modal('toggle');
+
+      $('#modalVisualizar'+id_inventario).on('hidden.bs.modal', function (e) {
+
+        $("#modalVisualizar"+id_proximo).modal({
+
+          'show': true,
+          'keyboard': true,
+          'foco': true
+
+        });
+        
+      });
+    }));
+
+    if($('.spanModalRetorn').bind('click', function(){
+
+      id_proximo = $(this).attr('data-type');
+      id_inventario = $(this).attr('id');
+      
+      $('#modalVisualizar'+id_inventario).modal('toggle');
+
+      $('#modalVisualizar'+id_inventario).on('hidden.bs.modal', function (e) {
+
+        $("#modalVisualizar"+id_proximo).modal({
+
+          'show': true,
+          'keyboard': true,
+          'foco': true
+
+        });
+      })
+    }));
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     var BASE_URL = 'http://www2.linkbio.com.br/admin/';
     $('.new_image').on('click', function(e) {
         e.preventDefault();
@@ -356,13 +414,11 @@ function selectArtist(obj) {
     $('#id_artista').val(id);
 }
 
-function add_situacao() {
 
-    $('#modal123').show();
-}
 
 function add_artista(obj) {
     var name = $('#artista').val();
+    var id = 1;
 
     if (name != '') {
 
@@ -379,7 +435,11 @@ function add_artista(obj) {
 
                         url: BASE_URL + 'ajax/add_artista',
                         type: 'POST',
-                        data: { name: name },
+                        data: 
+                        { name: name,
+                            id: id
+
+                        },
                         dataType: 'json',
                         success: function(json) {
                             swal({
@@ -411,6 +471,11 @@ function add_artista(obj) {
                 }
             });
     }
+}
+
+function add_situacao() {
+
+    $('#modal123').show();
 }
 
 function add_tecnica(obj) {

@@ -1,0 +1,1 @@
+<span class="label label-danger">Em Leilão</span>

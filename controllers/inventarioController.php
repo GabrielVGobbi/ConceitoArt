@@ -18,7 +18,7 @@ class InventarioController extends controller
     $this->mobile = controller::returnMobile();
 
     $this->id_inv_situacao = '';
- 
+
 
     //CLASSES//
     $this->inventario = new Inventario();
@@ -57,17 +57,24 @@ class InventarioController extends controller
 
       $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario($this->id_inv_situacao, $this->user->getCompany(), $this->dataInfo['filtro']);
       $this->dataInfo['p_count']          = ceil($this->dataInfo['inventario_count'] / 10);
-
+      $this->dataInfo['id_inventarioArray'] = $this->inventario->getID($offset, $this->dataInfo['filtro'], $this->user->getCompany());
 
       $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->dataInfo['filtro'], $this->user->getCompany());
+
+
+
+
+
+
+
+
+
       //if($this->mobile == false){
-        $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+      $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
       //}else {
       // $this->loadTemplate($this->dataInfo['pageController'] . "/index_mobile", $this->dataInfo);
       //}
-      } else {
-        
-      }
+    } else { }
   }
 
   public function add()

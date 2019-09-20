@@ -54,7 +54,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Descrição</label>
-                                            <input type="text" class="form-control" disabled name="leilao_descricao" id="leilao_descricao" value="<?php echo $not['leilao_descricao']; ?>">
+                                            <input type="text" class="form-control" disabled name="leilao_nome" id="leilao_nome" value="<?php echo $not['leilao_nome']; ?>">
                                         </div>
                                     </div>
 
@@ -128,7 +128,7 @@
 
                 <div class="modal-footer">
 
-                    <a href="<?php echo BASE_URL; ?>notas/GerarNota/<?php echo $not['id_nota']; ?>" class="btn btn-primary pull-right" style="margin-right: 5px;">
+                    <a href="<?php echo BASE_URL; ?>notas/GerarNota/<?php echo $not['id_nota']; ?>" target="_blank" class="btn btn-primary pull-right" style="margin-right: 5px;">
                         <i class="fa fa-download"></i> Gerar Nota
                     </a>
                 </div>

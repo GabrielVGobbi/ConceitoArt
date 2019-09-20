@@ -50,7 +50,7 @@ class ajaxController extends controller {
 
         if(isset($_POST['name']) && !empty($_POST['name'])) {
 
-            
+            error_log(print_r($_POST,1));
             $Parametros['artista'] = addslashes($_POST['name']);
 
             $data['id'] = $a->add($u->getCompany(), $Parametros);
@@ -113,4 +113,22 @@ public function add_tecnica() {
 
     echo json_encode($data);
 }
+
+    public function getPosto(){
+
+          $a = new Tecnica();
+        $array = array(
+            
+           
+                
+                'gasolina' => '50%',
+                'id' => '1',
+                
+               
+            
+        );
+
+        header("Content-Type: application/json");
+        echo json_encode($array);
+    }
 }

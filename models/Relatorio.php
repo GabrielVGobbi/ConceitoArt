@@ -14,28 +14,21 @@ Class Relatorio extends model {
 	}
 
 	public function getRelatorioByFiltro($filtro){
-
 		$this->where = $this->buildWhere($filtro);
-
 		
 		$sql = "SELECT * 
 		FROM  situacao_obra sit
 		INNER JOIN inventario inv ON (inv.id_inventario = sit.id_inventario)
 		INNER JOIN artista art ON (inv.id_artista = art.id_artista)
 		INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
-
 		
-		WHERE " .implode(' AND ', $this->where)." ORDER BY art.art_nome";
+		WHERE " .implode(' AND ', $this->where)." ORDER BY art.art_nome ";
 		$sql = $this->db->prepare($sql);
-
 		$this->bindWhere($filtro, $sql);
-
 		$sql->execute();
-
 		if($sql->rowCount() > 0) {
 			$this->array = $sql->fetchAll();
 		}
-
 		return $this->array;
 	}
 
@@ -76,7 +69,7 @@ Class Relatorio extends model {
 		INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 
 		
-		WHERE ".implode(' AND ', $this->where)." ORDER BY art_nome";
+		WHERE ".implode(' AND ', $this->where)." ORDER BY art_nome ";
 		$sql = $this->db->prepare($sql);
 
 		$this->bindWhere($filtro, $sql);
@@ -102,8 +95,10 @@ Class Relatorio extends model {
 
 		if(!empty($filtro['situacao'])) {
 
-			$this->where[] = "sit.descricao_situacao = :situacao";	
+			$this->where[] = "(sit.descricao_situacao = :situacao)";	
 		}
+
+
 
 		if(!empty($filtro['data'])) {
 

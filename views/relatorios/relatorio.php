@@ -87,7 +87,7 @@
 									<?php endforeach; ?>
 									<th>R$ <?php echo ($inv['preco_situacao'] != '' ? number_format($inv['preco_situacao'], 2, ',', '.') : '') ?></th>
 									<th><?php echo $inv['data_situacao'] ?></th>
-									<!-- <th style="position: relative;text-align: center;<?php echo ($inv['inv_venda'] == 1 ? 'color: #d80000 ' : '') ?> "><?php echo ($inv['inv_venda'] == 1 ? 'V' : 'NV') ?></th> -->
+									<th style="position: relative;text-align: center;<?php echo ($inv['inv_venda'] == 1 ? 'color: #d80000 ' : '') ?> "><?php echo ($inv['inv_venda'] == 1 ? 'V' : 'NV') ?></th>
 								</tr>
 							</div>
 							<?php include('includes/modalEditar.php'); ?>
@@ -98,8 +98,7 @@
 			<div>
 				Quantidade de obras: <?php echo count($tableDados); ?>
 
-				<p class="pull-right">Total: <?php echo '$ '.(number_format($total, 2, ',', '.')); ?><p>
-				</div>
+				
 			</div>		
 		</div>
 	</div>

@@ -3,7 +3,7 @@ $i = new Inventario;
 $historico = $i->getHistorico($inv['id_inventario'], '');
 ?>
 
-<div class="modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
+<div class="modal" role="dialog" z-index="99999" aria-labelledby="myLargeModalLabel"  aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
     <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/inventario/edit_action/<?php echo $inv['id_inventario'] ?>">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -21,6 +21,15 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                  <!--  <div class="pull-right">
+            <span style="position: absolute;left: 113%;top: 460px;width: 4%;font-size: 100px;color: white;cursor: pointer;" class="fa fa-angle-right spanModalRetorn" data-type="<?php echo $proximoValue; ?>" id="<?php echo $inv['id_inventario']?>"></span>
+        </div>
+
+        <div class="pull-left" style="left: -164px;position: relative;">
+            <span style="position: absolute;right: 113%;top: 460px;width: 8%;font-size: 100px;color: white;cursor: pointer;" class="fa fa-angle-left spanModalAvancer" data-type="<?php echo $proximoValue; ?>" id="<?php echo $inv['id_inventario'] ?>"></span>
+        </div> -->
+
 
                 </div>
 
@@ -97,6 +106,13 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                     <i class="fa fa-paperclip"></i> Foto
                                                     <input type="file" name="fotos[]" multiple>
                                                 </div>
+           
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4" style="    margin-top: 96px;">
+                                             <div class="form-group">
+                                                <label>Localização</label>
+                                                <input type="text" class="form-control" name="localizacao" id="localizacao" autocomplete="off" value="<?php echo $inv['inv_localizacao']; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -150,7 +166,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                     <?php if (count($historico) > 0) : ?>
                                         <?php foreach ($historico as $hist) : ?>
                                             <div class="box-body" style="margin-top: -20px;">
-                                                <div class="col-md-4">
+                                                <div class="col-md-12">
                                                     <input type="hidden" name="id_situacao" id="id_situacao" value="<?php echo $hist['id_situacao'] ?>">
                                                     <div class="form-group">
                                                         <label>Situação</label>
@@ -199,13 +215,23 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <?php if($hist['situacao_char'] == 1): ?>
+                                                    
+                                                    <?php controller::getLucro($inv['id_inventario']); ?>
+
+                                                <?php endif; ?>
+
+                                                <div class="col-md-12 text-center">
+                                                    --------------------------------------------------------------------------------------
+                                                </div>
                                             </div>
 
 
                                         <?php endforeach; ?>
 
                                         <div class="box-body" style="<?php echo ($hist['situacao_char'] == 1 ? 'display: none;'  : ''); ?>; margin-top: -20px;">
-                                            <div class="col-md-3">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Situação</label>
                                                     <input type="text" class="form-control" id="descricao_situacao" name="descricao_situacao" autocomplete="off">
@@ -254,7 +280,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                     </div>
                                 <?php else : ?>
                                     <div class="box-body">
-                                        <div class="col-md-3">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Situação</label>
                                                 <input type="text" class="form-control" id="descricao_situacao" name="descricao_situacao" autocomplete="off">
@@ -355,3 +381,4 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
         $(".input_artista").show("slow");
     }
 </script>
+

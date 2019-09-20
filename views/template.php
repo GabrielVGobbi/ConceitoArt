@@ -36,7 +36,7 @@
   <script src="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/bower_components/jquery/dist/jquery.min.js"></script>
 
   <script src="<?php echo BASE_URL; ?>node_modules/sweetalert/dist/sweetalert.min.js"></script>
-
+<script src="https://unpkg.com/imask"></script>
   <script type="text/javascript">
     var BASE_URL = '<?php echo BASE_URL; ?>'
   </script>
@@ -84,6 +84,22 @@
 
               <?php if ($this->userInfo['user']->hasPermission('notas_view')) : ?>
                 <li class="active"><a href="<?php echo BASE_URL; ?>notas">Notas <span class="sr-only">(current)</span></a></li>
+              <?php endif; ?>
+
+              <?php if ($this->userInfo['user']->hasPermission('financeiro_view')) : ?>
+                <li class="active"><a href="<?php echo BASE_URL; ?>financeiro">Financeiro <span class="sr-only">(current)</span></a></li>
+              <?php endif; ?>
+
+              <?php if ($this->userInfo['user']->hasPermission('mercadolivre_view')) : ?>
+                <li class="active"><a href="<?php echo BASE_URL; ?>fotos">Fotos <span class="sr-only">(current)</span></a></li>
+              <?php endif; ?>
+
+              <?php if ($this->userInfo['user']->hasPermission('documento_view')) : ?>
+                <li class="active"><a href="<?php echo BASE_URL; ?>documentos">Documentos <span class="sr-only">(current)</span></a></li>
+              <?php endif; ?>
+
+              <?php if ($this->userInfo['user']->hasPermission('leilao_view')) : ?>
+                <li class="active"><a href="<?php echo BASE_URL; ?>leilao">Leilão <span class="sr-only">(current)</span></a></li>
               <?php endif; ?>
 
             </ul>
