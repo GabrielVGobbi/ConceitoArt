@@ -15,8 +15,9 @@ class Leilao extends model
 
 		$where = $this->buildWhere($filtro, $id_company);
 
-		$sql = "SELECT * FROM  
+		$sql = "SELECT *, lei.id_leilao as id_leilao FROM  
 			leilao lei
+			LEFT JOIN leilao_info leif ON (lei.id_leilao = leif.id_leilao)
 		
 		WHERE " . implode(' AND ', $where);
 
@@ -38,7 +39,7 @@ class Leilao extends model
 
 
 		$where = array(
-			'id_company=' . $id
+			'lei.id_company=' . $id
 		);
 
 
@@ -82,38 +83,55 @@ class Leilao extends model
 	{
 
 		$leilao_nome = $Parametros['leilao_nome'];
-		$leilao_endereco =$Parametros['leilao_endereco'];
-		
-			$sql = $this->db->prepare("INSERT INTO leilao SET 
-            			leilao_nome = :leilao_nome, 
-            			leilao_endereco = :leilao_endereco,
-            			id_company = :id_company
-            	
-        			");
+		$leilao_endereco = $Parametros['leilao_endereco'];
 
-			$sql->bindValue(":leilao_nome", $leilao_nome);
+		$sql = $this->db->prepare("INSERT INTO leilao SET 
+					leilao_nome = :leilao_nome, 
+					leilao_endereco = :leilao_endereco,
+					id_company = :id_company
+			
+				");
 
-			$sql->bindValue(":leilao_endereco", $leilao_endereco);
+		$sql->bindValue(":leilao_nome", $leilao_nome);
+
+		$sql->bindValue(":leilao_endereco", $leilao_endereco);
+		$sql->bindValue(":id_company", $id_company);
+
+		$sql->execute();
+
+		$id_leilao = $this->db->lastInsertId();
+
+		if ($id_company == 1) {
+
+			$sql = $this->db->prepare("INSERT INTO leilao_info SET 
+						
+					pagamento = 0,
+					comprovante = 0,
+					cadastro = 0,
+					id_company = :id_company,
+					id_leilao = :id_leilao
+			
+				");
+
+			$sql->bindValue(":id_leilao", $id_leilao);
 			$sql->bindValue(":id_company", $id_company);
-
 			$sql->execute();
-		
-
+		}
 	}
 
-	public function edit($id_company,$Parametros)
+	public function edit($id_company, $Parametros)
 	{
 
-$leilao_nome = $Parametros['leilao_nome'];
-		$leilao_endereco =$Parametros['leilao_endereco'];
+		$leilao_nome = $Parametros['leilao_nome'];
+		$leilao_endereco = $Parametros['leilao_endereco'];
 		$id_leilao = $Parametros['id_leilao'];
 
 		if (isset($Parametros['id_leilao']) && $Parametros['id_leilao'] != '') {
 
 			$sql = $this->db->prepare("UPDATE leilao SET 
 				leilao_nome = :leilao_nome, 
-            			leilao_endereco = :leilao_endereco,
-            			id_company = :id_company
+				leilao_endereco = :leilao_endereco,
+				id_company = :id_company
 
 				WHERE id_leilao = :id_leilao
         	");
@@ -121,12 +139,54 @@ $leilao_nome = $Parametros['leilao_nome'];
 
 			$sql->bindValue(":leilao_endereco", $leilao_endereco);
 			$sql->bindValue(":id_company", $id_company);
-				$sql->bindValue(":id_leilao", $id_leilao);
+			$sql->bindValue(":id_leilao", $id_leilao);
 			$sql->execute();
 		}
 	}
 
-	
+
+	public function financeiro($id_leilao, $tipoPagamento, $tipo, $id_company)
+	{
+
+
+
+		switch ($tipoPagamento) {
+			case 'pagamento':
+				$coluna = 'pagamento';
+				$salvamento = $tipo;
+				break;
+			case 'envio':
+				$coluna = 'comprovante';
+				$salvamento = $tipo;	
+				break;
+			case 'cadastro':
+				$coluna = 'cadastro';
+				$salvamento = $tipo;	
+				break;
+		}
+
+		error_log(print_r($pagamento,1));
+
+		if (isset($id_leilao) && $id_leilao != '') {
+
+			$sql = $this->db->prepare("UPDATE leilao_info SET 
+						
+					`$coluna` = :salvamento
+
+				WHERE id_leilao = :id_leilao AND id_company = :id_company
+			");
+			
+			$sql->bindValue(":id_company", $id_company);
+			$sql->bindValue(":id_leilao", $id_leilao);
+			$sql->bindValue(":salvamento", $salvamento);
+
+			
+
+			$sql->execute();
+		}
+	}
+
+
 	public function delete($id, $id_company)
 	{
 

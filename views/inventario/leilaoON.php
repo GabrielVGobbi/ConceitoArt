@@ -1,1 +1,1 @@
-<span class="label label-danger">Em Leilão</span>
+<span class="label label-danger"><?php echo $array['descricao_situacao']; ?></span>

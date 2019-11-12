@@ -1,7 +1,7 @@
     <div class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $cli['id_leilao']; ?>">
         <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/leilao/edit_action/<?php echo $cli['id_leilao'] ?>">
             
-        <input type="text" class="form-control" style="display:none" name="id_endereco" id="id_endereco" autocomplete="off" value="<?php echo $cli['id_endereco']; ?>">
+        <input type="text" class="form-control" style="display:none" name="id_endereco" id="id_endereco" autocomplete="off" value="<?php echo ( isset($cli['leilao_endereco'])) ? $cli['leilao_endereco'] : ''; ?>">
         <input type="text" class="form-control" style="display:none" name="id_leilao" id="id_leilao" autocomplete="off" value="<?php echo $cli['id_leilao']; ?>">
         <input type="text" class="form-control" style="display:none" name="leilao_nome" id="leilao_nome" autocomplete="off" value="<?php echo $cli['leilao_nome']; ?>">
 
@@ -32,7 +32,7 @@
                                          <div class="col-md-8">
                                             <div class="form-group">
                                                 <label>Endereço</label>
-                                                <input type="text" class="form-control" name="leilao_endereco" id="leilao_endereco" autocomplete="off" value="<?php echo $cli['leilao_endereco']; ?>">
+                                                <input type="text" class="form-control" name="leilao_endereco" id="leilao_endereco" autocomplete="off" value="<?php echo ( isset($cli['leilao_endereco'])) ? $cli['leilao_endereco'] : ''; ?>">
                                             </div>
                                         </div>
   

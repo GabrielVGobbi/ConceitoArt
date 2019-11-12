@@ -180,10 +180,17 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                         <input type="text" class="form-control" name="edit_data_situacao" id="edit_data_situacao" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo $hist['data_situacao']; ?>">
                                                     </div>
                                                 </div>
-
+                                                <?php if($hist['situacao_char'] == 1): ?>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label>Preço Bruto</label>
+                                                            <input type="text" class="form-control" id="edit_preco_bruto" name="edit_preco_bruto" autocomplete="off" value="R$ <?php echo ($hist['preco_bruto'] != '' ? number_format($hist['preco_bruto'], 2, ',', '.') : '') ?>">
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <label>Preço</label>
+                                                        <label>Preço de Venda</label>
                                                         <input type="text" class="form-control" id="edit_preco_situacao" name="edit_preco_situacao" autocomplete="off" value="R$ <?php echo ($hist['preco_situacao'] != '' ? number_format($hist['preco_situacao'], 2, ',', '.') : '') ?>">
                                                     </div>
                                                 </div>
@@ -243,10 +250,17 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                     <input type="text" class="form-control" name="data_situacao" id="data_situacao" data-inputmask="'alias': 'mm/yyyy'" data-mask="">
                                                 </div>
                                             </div>
-
+                                            <?php if($hist['situacao_char'] == 1): ?>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>Preço Bruto</label>
+                                                        <input type="text" class="form-control" id="preco_bruto" name="preco_bruto" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
                                             <div class="col-md-2">
                                                 <div class="form-group">
-                                                    <label>Preço</label>
+                                                    <label>Preço de Venda</label>
                                                     <input type="text" class="form-control" id="preco_situacao" name="preco_situacao" autocomplete="off">
                                                 </div>
                                             </div>

@@ -159,7 +159,7 @@ class Inventario extends model
 
       if ($filtro['artista'] != '') {
 
-        $where[] = "art.art_nome LIKE :art_nome";
+        $where[] = "art.art_nome = :art_nome";
       }
     }
 
@@ -207,7 +207,7 @@ class Inventario extends model
 
     if (!empty($filtro['artista'])) {
       if ($filtro['artista'] != '') {
-        $sql->bindValue(":art_nome", '%' . $filtro['artista'] . '%');
+        $sql->bindValue(":art_nome",  $filtro['artista']);
       }
     }
 
@@ -362,10 +362,11 @@ class Inventario extends model
     $situacao['descricao_situacao']                   =  controller::ReturnValor($Parametros['descricao_situacao']);
     $situacao['data_situacao']                        = ($Parametros['data_situacao']);
     $situacao['preco_situacao']                       =  controller::PriceSituation($Parametros['preco_situacao']);
+    $situacao['preco_bruto']                       =  controller::PriceSituation($Parametros['preco_bruto']);
+
     $situacao['situacao_char']                        = ($Parametros['situacao_char']);
     $situacao['retirada']                             = isset($Parametros['retirada']) ? strtoupper($Parametros['retirada']) : '';
     $situacao['leilao_codigo']                        =  controller::ReturnFormatLimpo($Parametros['leilao_codigo']);
-
 
 
     //SITUACAO DA OBRA (EDIÇÃO)
@@ -373,7 +374,11 @@ class Inventario extends model
 
       $situacaoEdit['edit_situacao']                        =  controller::ReturnValor($Parametros['edit_situacao']);
       $situacaoEdit['edit_data_situacao']                   = ($Parametros['edit_data_situacao']);
+      $situacaoEdit['codigo']                   = ($Parametros['codigo']);
+
       $situacaoEdit['edit_preco_situacao'] = !empty($Parametros['edit_preco_situacao']) ? controller::PriceSituation($Parametros['edit_preco_situacao']) : '';
+      $situacaoEdit['edit_preco_bruto'] = !empty($Parametros['edit_preco_bruto']) ? controller::PriceSituation($Parametros['edit_preco_bruto']) : '';
+
       $situacaoEdit['edit_venda_situacao']                  = ($Parametros['edit_venda_situacao']);
       $situacaoEdit['id_situacao']                          = ($Parametros['id_situacao']);
       $situacaoEdit['edit_retirada']                        = strtoupper($Parametros['edit_retirada']);
@@ -411,6 +416,7 @@ class Inventario extends model
       $sql->bindValue(':observacao',   $observacao);
       $sql->bindValue(':localizacao',   $localizacao);
       $sql->bindValue(':price_venda',   $price_venda);
+
       $sql->bindValue(':situacao_venda',   $situacao['situacao_char']);
 
       if ($sql->execute()) {
@@ -483,6 +489,7 @@ class Inventario extends model
             id_inventario          = :id_product, 
             id_user                = :id_user, 
             preco_situacao         = :preco_situacao,
+            preco_bruto            = :preco_bruto,
             descricao_situacao     = :descricao_situacao,
             data_situacao          = :data_situacao,
             situacao_char          = :situacao_char,
@@ -496,6 +503,7 @@ class Inventario extends model
     $sql->bindValue(":id_product",          $id_product);
     $sql->bindValue(":id_user",             $id_user);
     $sql->bindValue(":preco_situacao",      $situacao['preco_situacao']);
+    $sql->bindValue(":preco_bruto",      $situacao['preco_bruto']);
     $sql->bindValue(":descricao_situacao",  trim($situacao['descricao_situacao']));
     $sql->bindValue(":data_situacao",       $situacao['data_situacao']);
     $sql->bindValue(":situacao_char",       $situacao['situacao_char']);
@@ -552,7 +560,8 @@ class Inventario extends model
 
     $id_situacao = $situacao['id_situacao'];
 
-    $sql = $this->db->prepare("UPDATE situacao_obra SET 
+
+        $sql = $this->db->prepare("UPDATE situacao_obra SET 
 
             id_company             = :id_company,  
             id_user                = :id_user, 
@@ -560,23 +569,26 @@ class Inventario extends model
             data_situacao          = :data_situacao,
             situacao_char          = :situacao_char,
             preco_situacao         = :preco_situacao, 
-            retirada               = :retirada
+            retirada               = :retirada,
+            codigo                  = :codigo
 
             WHERE id_situacao = :id_situacao
 
             ");
 
-    $sql->bindValue(":id_company",          $id_company);
-    $sql->bindValue(":id_situacao",         $id_situacao);
-    $sql->bindValue(":id_user",             $id_user);
-    $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
-    $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
-    $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
-    $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
-    $sql->bindValue(":retirada",            $situacao['edit_retirada']);
+        $sql->bindValue(":id_company",          $id_company);
+        $sql->bindValue(":id_situacao",         $id_situacao);
+        $sql->bindValue(":id_user",             $id_user);
+        $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
+        $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
+        $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
+        $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
+        $sql->bindValue(":retirada",            $situacao['edit_retirada']);
+        $sql->bindValue(':codigo',   $situacao['codigo']);
 
 
-    $sql->execute();
+
+        $sql->execute();
 
 
     try {
@@ -871,8 +883,8 @@ class Inventario extends model
   public function getleilaoON($id)
   {
     $sql = "
-      SELECT retirada, situacao_char, id_inventario FROM situacao_obra sit
-      WHERE sit.id_inventario = :id AND sit.situacao_char = '0' AND retirada <> :retirada";
+      SELECT id_situacao,retirada, situacao_char, id_inventario, descricao_situacao FROM situacao_obra sit
+      WHERE sit.id_inventario = :id AND retirada <> :retirada ORDER BY id_situacao DESC LIMIT 1 ";
     $sql = $this->db->prepare($sql);
     $sql->bindValue(":id", $id);
     $sql->bindValue(":retirada", 'OK');

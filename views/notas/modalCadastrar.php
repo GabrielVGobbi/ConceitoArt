@@ -55,7 +55,7 @@
 
                                                 <?php foreach ($leilao as $lei) : ?>
                                                     <option value="<?php echo $lei['id_leilao']; ?>"><?php echo $lei['leilao_nome']; ?></option>
-                                                <?php endforeach; ?>
+                                                <?php endforeach; error_log(print_r($lei,1)); ?>
                                             </select>
                                         </div>
                                     </div>

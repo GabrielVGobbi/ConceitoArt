@@ -101,14 +101,23 @@
 											<?php foreach ($historico as $hist): ?> 
 
 
-												<div class="col-md-6">
+												<div class="col-md-3">
 													<input type="hidden" name="id_situacao" id="id_situacao" value="<?php echo $hist['id_situacao'] ?>">
 													<div class="form-group">
 														<label>Situação</label>
 														<input type="text" class="form-control"  id="edit_situacao" name="edit_situacao" autocomplete="off" value="<?php echo $hist['descricao_situacao']; ?>">
 													</div>
 												</div>
+
 												<div class="col-md-2">
+													<div class="form-group">
+														<label>Codigo</label>
+														<input type="text" class="form-control" id="codigo" name="codigo"  autocomplete="off" value="<?php echo ($hist['codigo']);?>">
+													</div>
+												</div>
+
+
+												<div class="col-md-1">
 													<div class="form-group">
 														<label>Data</label>
 														<input type="text" class="form-control"  id="edit_data_situacao" name="edit_data_situacao" autocomplete="off" value="<?php echo $hist['data_situacao']; ?>">
@@ -117,8 +126,16 @@
 
 												<div class="col-md-2">
 													<div class="form-group">
+														<label>Preço Bruto</label>
+														<input type="text" class="form-control" id="edit_preco_bruto" name="edit_preco_bruto"  autocomplete="off" value="R$ <?php echo ($hist['preco_bruto'] != '' ? number_format($hist['preco_bruto'], 2, ',', '.') : '') ?>">
+													</div>
+												</div>
+
+
+												<div class="col-md-2">
+													<div class="form-group">
 														<label>Preço</label>
-														<input type="text" class="form-control" id="edit_preco_situacao" name="edit_preco_situacao"  autocomplete="off" value="R$ <?php echo ($hist['preco_situacao'] != '' ? number_format($hist['preco_situacao'], 2, ',', '.') : '') ?>">
+														<input type="text" class="form-control" id="codigo" name="edit_preco_situacao"  autocomplete="off" value="R$ <?php echo ($hist['preco_situacao'] != '' ? number_format($hist['preco_situacao'], 2, ',', '.') : '') ?>">
 													</div>
 												</div>
 
@@ -150,7 +167,7 @@
 													<div style="<?php echo ($hist['situacao_char'] == 1 ? 'display: none;'  : ''); ?>">	
 													<?php endforeach; ?>
 
-													<div class="col-md-6">
+													<div class="col-md-4">
 														<div class="form-group">
 															<label>Situação</label>
 															<input type="text" class="form-control"  name="descricao_situacao" id="descricao_situacao" autocomplete="off">
@@ -162,6 +179,14 @@
 															<input type="text" class="form-control"  name="data_situacao" id="data_situacao" autocomplete="off">
 														</div>
 													</div>
+
+													<div class="col-md-2">
+														<div class="form-group">
+															<label>Preço Bruto</label>
+															<input type="text" class="form-control"  name="preco_bruto" id="preco_bruto" autocomplete="off">
+														</div>
+													</div>
+
 
 													<div class="col-md-2">
 														<div class="form-group">

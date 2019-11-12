@@ -22,7 +22,7 @@ Class Relatorio extends model {
 		INNER JOIN artista art ON (inv.id_artista = art.id_artista)
 		INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 		
-		WHERE " .implode(' AND ', $this->where)." ORDER BY art.art_nome ";
+		WHERE " .implode(' AND ', $this->where)." ORDER BY codigo, art.art_nome ";
 		$sql = $this->db->prepare($sql);
 		$this->bindWhere($filtro, $sql);
 		$sql->execute();

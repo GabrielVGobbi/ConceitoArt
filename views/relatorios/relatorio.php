@@ -1,4 +1,4 @@
-<?php $titulo = isset($viewData['titulo']) ? 'Relatório - '.$viewData['titulo'] : 'Relatório'; ?>
+<?php $titulo = ($viewData['titulo'] != '') ? 'Relatório - '.$viewData['titulo'] : ''; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -12,14 +12,22 @@
 	<script src="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/dist/css/AdminLTE.min.css">
 
+	<style>
+                @media print { 
+                    #noprint { display:none; } 
+                }
+            </style>
 
 </head>
 <body>
 	<div id="normal" style="display: all;">
-		<a style="width: 8%;" type="button" onclick="modoexcel();" class="btn btn-block btn-info btn-lg pull-right">Modo Excel</a>
+		
 		<div class="container theme-showcase normal" role="main">
 			<div class="page-header">
-				<a style="width: 8%;" type="button" href="<?php echo BASE_URL;?>relatorio" class="btn btn-block btn-info btn-lg pull-right">Voltar</a>
+				<div id="noprint" class="col-md-12">
+					<a style="width: 8%;" type="button" href="<?php echo BASE_URL;?>relatorio" class="btn btn-block btn-info btn-lg pull-right ">Voltar</a>
+					<a style="width: 8%;" type="button" onclick="modoexcel();" class="btn btn-block btn-info btn-lg pull-right ">Excel</a>
+				</div>
 				<h1><?php echo $titulo ?></h1>
 
 			</div>
@@ -87,7 +95,7 @@
 									<?php endforeach; ?>
 									<th>R$ <?php echo ($inv['preco_situacao'] != '' ? number_format($inv['preco_situacao'], 2, ',', '.') : '') ?></th>
 									<th><?php echo $inv['data_situacao'] ?></th>
-									<th style="position: relative;text-align: center;<?php echo ($inv['inv_venda'] == 1 ? 'color: #d80000 ' : '') ?> "><?php echo ($inv['inv_venda'] == 1 ? 'V' : 'NV') ?></th>
+									<th id="noprint" style="position: relative;text-align: center;<?php echo ($inv['inv_venda'] == 1 ? 'color: #d80000 ' : '') ?> "><?php echo ($inv['inv_venda'] == 1 ? 'V' : 'NV') ?></th>
 								</tr>
 							</div>
 							<?php include('includes/modalEditar.php'); ?>

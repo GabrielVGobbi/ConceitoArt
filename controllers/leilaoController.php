@@ -97,6 +97,19 @@ class LeilaoController extends controller
             $this->dataInfo['mensagem'] = "Não foi possivel excluir!";
         }
     }
+    
+
+    public function financeiro($id_leilao, $tipoPagamento, $tipo)
+    {
+
+
+        $this->leilao->financeiro($id_leilao, $tipoPagamento, $tipo, $this->user->getCompany());
+        header("Location: " . BASE_URL . "leilao");
+        exit();
+
+
+    }
+
 
 
     public function addValicao($result)
