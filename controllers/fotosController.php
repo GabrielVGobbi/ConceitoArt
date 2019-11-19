@@ -29,7 +29,7 @@ class FotosController extends controller
     public function index()
     {
 
-        if ($this->user->hasPermission('clientes_view')) {
+       
 
             if (isset($_GET['filtros'])) {
                 $this->filtro = $_GET['filtros'];
@@ -56,7 +56,7 @@ class FotosController extends controller
 
 
             $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
-        } else { }
+        
     }
 
 

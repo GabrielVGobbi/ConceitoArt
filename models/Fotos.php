@@ -15,12 +15,15 @@ class Fotos extends model
 
 		$where = $this->buildWhere($filtro, $id_company);
 
-		$sql = "SELECT * FROM  
-			inventario_image invimg
-			INNER JOIN inventario inv ON (inv.id_inventario = invimg.id_inventario)
-			INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+		$sql = "SELECT inv.*,img.url, art.art_nome, tec.nome_tecnica, 
+		proc.id_procedencia, proc.descricao,proc.inventario_preco, proc.data
+				FROM  procedencia proc
+				RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
+				INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+				INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+				LEFT JOIN inventario_image img ON (inv.id_inventario = img.id_inventario)
 		
-		WHERE " . implode(' AND ', $where) . " LIMIT $offset, 10";
+		WHERE " . implode(' AND ', $where) . " ORDER BY inv.id_inventario DESC LIMIT $offset, 10";
 
 		$sql = $this->db->prepare($sql);
 
