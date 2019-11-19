@@ -27,12 +27,14 @@
 						<div class="col-md-7">
 							<label for="fl_art_nome">Artista</label>
 							<div class="form-group">
-								<select class="form-control select2" style="width: 100%;" name="filtros[artista]" id="filtros[artista]">
+								<!--<select class="form-control select2" style="width: 100%;" name="filtros[artista]" id="filtros[artista]">
 									<option selected="selected" value="0">Selecione </option>
-									<?php foreach ($viewData['artista'] as $a) : ?>
-										<option <?php echo (isset($viewData['filtro']['artista']) && $viewData['filtro']['artista'] == $a['art_nome']) ?  'selected' : '' ?> value="<?php echo $a['art_nome']; ?>"><?php echo $a['art_nome'] ?></option>
-									<?php endforeach; ?>
-								</select>
+									<?php #foreach ($viewData['artista'] as $a) : ?>
+										<option  #echo (isset($viewData['filtro']['artista']) && $viewData['filtro']['artista'] == $a['art_nome']) ?  'selected' : ''  value=" #echo $a['art_nome']; ">#$a['art_nome'] </option>
+									<?php #endforeach; ?>
+								</select>-->
+								<input class="form-control" id="filtro_descricao" name="filtros[artista]" placeholder="" autocomplete="off">
+
 							</div>
 						</div>
 

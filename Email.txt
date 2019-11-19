@@ -1,0 +1,47 @@
+<?php
+
+/* Ler um e-mail */
+//Conecta-se ao MailServer
+$host = "imap.terra.com.br";
+$usuario = "marciogobbi@terra.com.br";
+$senha = "308816";
+//recebe a conexao
+$mbox = imap_open("{" . $host . ":143/novalidate-cert}INBOX", $usuario, $senha) or die("can't connect: " . imap_last_error());
+
+$date = date("j F Y");
+
+$emails = imap_search($mbox, 'ON "' . $date . '"');
+
+foreach ($emails as $e) {
+    $header = imap_headerinfo($mbox, $e);
+
+
+    
+    $tags = 'arrematados';
+    $re = 'Re:';
+
+
+    if (strstr ($header->subject,$tags)) {
+
+     
+        if (!strstr ($header->subject,'Re')) {
+
+     
+            error_log(print_r($header, 1));
+
+
+      }
+        
+
+      } else {
+        
+      }
+}
+
+
+
+
+
+
+
+imap_close($mbox);

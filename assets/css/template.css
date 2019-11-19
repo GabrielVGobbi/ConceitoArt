@@ -3,6 +3,10 @@ body {
     margin: 0;
 }
 
+table.dataTable tbody tr.warningtype {
+    background-color: #fbbdbd;
+}
+
 .topo {
     height: 40px;
     background-color: #999;
@@ -10,18 +14,6 @@ body {
     color: #FFF;
     font-size: 15px;
     line-height: 40px;
-}
-
-.table-danger,
-.table-danger>td,
-.table-danger>th {
-    background-color: #ffcfd4c2;
-}
-
-.table-warning,
-.table-warning>td,
-.table-warning>th {
-    background-color: #ec970e38 !important;
 }
 
 .solid-green {

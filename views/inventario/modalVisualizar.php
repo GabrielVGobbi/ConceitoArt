@@ -12,24 +12,8 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h2 class="modal-title fc-center" align="center" id="exampleModalLabel"><?php echo $inv['art_nome']; ?></h2>
-                    <div class="input_artista" style="display: none;">
-                        <label>Selecione o Artista </label>
-                        <select class="form-control select2" style="width: 100%;" name="id_artista" id="id_artista">
-                            <option value="<?php echo $inv['id_artista'] ?>"><?php echo ucfirst($inv['art_nome']) ?></option>
-                            <?php foreach ($viewData['artista'] as $a) : ?>
-                                <option value="<?php echo $a['id_artista']; ?>"><?php echo ucfirst($a['art_nome']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                  <!--  <div class="pull-right">
-            <span style="position: absolute;left: 113%;top: 460px;width: 4%;font-size: 100px;color: white;cursor: pointer;" class="fa fa-angle-right spanModalRetorn" data-type="<?php echo $proximoValue; ?>" id="<?php echo $inv['id_inventario']?>"></span>
-        </div>
-
-        <div class="pull-left" style="left: -164px;position: relative;">
-            <span style="position: absolute;right: 113%;top: 460px;width: 8%;font-size: 100px;color: white;cursor: pointer;" class="fa fa-angle-left spanModalAvancer" data-type="<?php echo $proximoValue; ?>" id="<?php echo $inv['id_inventario'] ?>"></span>
-        </div> -->
-
+                    
+            
 
                 </div>
 
@@ -99,7 +83,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <?php $this->loadImg($inv, true); ?>
+                                            <img src="<?php echo BASE_URL?>assets/images/anuncios/<?php echo $artista ?>/<?php echo $inv['url'] ?>" class="img-table" style="width:100%;"/> 
                                             </div>
                                             <div class="form-group">
                                                 <div class="btn btn-default btn-file">
@@ -352,13 +336,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="box-body" style="">
-                                    <?php $img_obras = $this->inventario->getImagesByProduct($inv['id_inventario']) ?>
-                                    <?php $artista = str_replace(' ', '_', $inv['art_nome']); ?>
-                                    <?php foreach ($img_obras as $img) : ?>
-                                        <div class="col-md-6">
-                                            <img src="<?php echo BASE_URL ?>assets/images/anuncios/<?php echo $artista ?>/<?php echo $img['url'] ?>" class="img-table" />
-                                        </div>
-                                    <?php endforeach ?>
+                                   
                                 </div>
                             </div>
                         </div>

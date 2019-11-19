@@ -16,6 +16,7 @@
 	}
 
 	$img = $this->inventario->getImagesByProductId($viewData['id_inventario']);
+	
 
 ?>
 

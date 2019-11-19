@@ -2,7 +2,7 @@
 
 $(function() {
 
-
+   
 
     if($('.spanModalAvancer').bind('click', function(){
 
@@ -70,6 +70,13 @@ $(function() {
     });
 
 });
+
+function modalopenEdit(obj){
+
+    var id = $(obj).attr('id');
+    console.log(id);
+    window.location.href = BASE_URL+'inventario/edit'+id;
+}
 
 
 function Modal($id, $modal) {

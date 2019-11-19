@@ -30,15 +30,16 @@
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/dist/css/AdminLTE.min.css">
 
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
 
   <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 
   <script src="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/bower_components/jquery/dist/jquery.min.js"></script>
 
   <script src="<?php echo BASE_URL; ?>node_modules/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://unpkg.com/imask"></script>
+  <script src="https://unpkg.com/imask"></script>
   <script type="text/javascript">
-    var BASE_URL = '<?php echo BASE_URL; ?>'
+    var BASE_URL = '<?php echo BASE_URL; ?>';
   </script>
 
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/bower_components/select2/dist/css/select2.min.css">
@@ -47,8 +48,9 @@
 
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/template.css">
 </head>
-<?php 
+<?php
 ?>
+
 <body class="hold-transition skin-blue layout-top-nav">
   <div class="wrapper">
 
@@ -67,7 +69,7 @@
             <ul class="nav navbar-nav">
 
 
-    
+
               <?php if ($this->userInfo['user']->hasPermission('inventario_view')) : ?>
                 <li class="active"><a href="<?php echo BASE_URL; ?>inventario">Obras <span class="sr-only">(current)</span></a></li>
               <?php endif; ?>
@@ -240,6 +242,9 @@
   <!-- AdminLTE for demo purposes -->
   <script src="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/dist/js/demo.js"></script>
 
+  <script src="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/plugins/datatables/jquery.dataTables.js"></script>
+  <script src="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+
 
 
 
@@ -271,6 +276,68 @@
     </script>
 
   <?php endif; ?>
+
+  <script type="text/javascript">
+    var save_method; //for save method string
+    var table;
+
+    $(function() {
+
+      $(document).ready(function() {
+
+        var myTable = $('#table').DataTable({
+          "processing": true,
+          "serverSide": true,
+          "autoWidth": false,
+          displayLength: 10, 
+          "language": {
+            "sEmptyTable": "Nenhum registro encontrado",
+            "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registro(s)",
+            "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+            "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ".",
+            "sLengthMenu": "_MENU_",
+            "sLoadingRecords": "Carregando...",
+            "sProcessing": "Processando...",
+            "sZeroRecords": "Nenhum registro encontrado",
+            "sSearch": "Pesquisa Rapida",
+          },
+          "oPaginate": {
+            "sNext": "Próximo",
+            "sPrevious": "Anterior",
+            "sFirst": "Primeiro",
+            "sLast": "Último"
+          },
+          rowCallback: function(row, data, index) {
+            if (data[4] == 1) {
+              $(row).addClass('warningtype');
+            }
+            $(row).attr('id', data[5]);
+            
+          },
+          columnDefs: [{
+            targets: 2,
+            createdCell: function(td) {
+              $(td).addClass('modalEdit');
+            }
+          }],
+          
+          paginate: true,
+          filter: true,
+          "ajax": {
+            "url": BASE_URL + "<?php echo $viewData['pageController']; ?>/getAll",
+            "type": "POST",
+            "data": {
+
+            }
+
+          },
+        });
+      });
+    });
+
+  </script>
 
 </body>
 

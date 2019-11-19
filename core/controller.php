@@ -196,16 +196,7 @@ class controller
         }
     }
 
-    public function getLeilaoON($id_inventario)
-    {
-        
-        $u = new Inventario;
-        $array = $u->getleilaoON($id_inventario);
-        if(count($array) > 0){
-            
-            include 'views/inventario/leilaoON.php';
-        }
-    }
+    
 
 
 
