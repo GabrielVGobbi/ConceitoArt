@@ -92,9 +92,7 @@
                 <li class="active"><a href="<?php echo BASE_URL; ?>financeiro">Financeiro <span class="sr-only">(current)</span></a></li>
               <?php endif; ?>
 
-              <?php if ($this->userInfo['user']->hasPermission('mercadolivre_view')) : ?>
                 <li class="active"><a href="<?php echo BASE_URL; ?>fotos">Fotos <span class="sr-only">(current)</span></a></li>
-              <?php endif; ?>
 
               <?php if ($this->userInfo['user']->hasPermission('documento_view')) : ?>
                 <li class="active"><a href="<?php echo BASE_URL; ?>documentos">Documentos <span class="sr-only">(current)</span></a></li>
