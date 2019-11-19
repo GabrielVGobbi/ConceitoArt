@@ -81,7 +81,7 @@ include("modalCadastrar.php");
                     </tbody>
                     <?php else : ?>
                     <tr>
-                        <td style="width: 50%;text-align: center;"> Não foram encontrados resultados </td>
+                        <td style="width: 50%;text-align: center;"> Faça uma pesquisa por artista ou descrição </td>
                     </tr>
                     <?php endif; ?>
                 </table>
@@ -159,61 +159,3 @@ include("modalCadastrar.php");
 </div>
 
 
-<script type="text/javascript">
-  
-
-
-
-
-
-
-$(function () {
-
-    if($('.spanModalAvancer').bind('click', function(){
-
-      id_proximo = parseInt($(this).attr('id')) + parseInt(1);
-      id_inventario = $(this).attr('id');
-      
-      $('#modalVisualizar'+id_inventario).modal('toggle');
-
-      $('#modalVisualizar'+id_inventario).on('hidden.bs.modal', function (e) {
-
-        $("#modalVisualizar"+id_proximo).modal({
-
-          'show': true,
-          'keyboard': true,
-          'foco': true
-
-        });
-        
-      })
-
-    }));
-
-     if($('.spanModalRetorn').bind('click', function(){
-
-      id_proximo = parseInt($(this).attr('id')) - parseInt(1);
-      id_inventario = $(this).attr('id');
-      
-      $('#modalVisualizar'+id_inventario).modal('toggle');
-
-      $('#modalVisualizar'+id_inventario).on('hidden.bs.modal', function (e) {
-
-        $("#modalVisualizar"+id_proximo).modal({
-
-          'show': true,
-          'keyboard': true,
-          'foco': true
-
-        });
-      })
-
-
-    }));
-   });
-
-
-
-
-
-</script>

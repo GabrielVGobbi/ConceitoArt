@@ -33,6 +33,7 @@
 										<option <?php echo (isset($viewData['filtro']['artista']) && $viewData['filtro']['artista'] == $a['art_nome']) ?  'selected' : '' ?> value="<?php echo $a['art_nome']; ?>"><?php echo $a['art_nome'] ?></option>
 									<?php endforeach; ?>
 								</select>
+								
 							</div>
 						</div>
 

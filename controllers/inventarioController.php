@@ -30,6 +30,9 @@ class InventarioController extends controller
       'pageController' => 'inventario',
       'user' => $this->user->getInfo($this->user->getId(), $this->user->getCompany()),
       'filtro' => array(),
+      'tableDados' =>array(),
+      'p_count' => 1,
+      'inventario_count' => 0
     );
   }
 
@@ -37,6 +40,32 @@ class InventarioController extends controller
   {
 
     if ($this->user->hasPermission('inventario_view')) {
+      
+      $this->dataInfo['artista']      = $this->artista->getAll('', $this->user->getCompany());
+      $this->dataInfo['tecnica']      = $this->tecnica->getAll('', $this->user->getCompany());
+      
+      if (isset($_GET['filtros'])) {
+        $this->dataInfo['filtro'] = $_GET['filtros'];
+
+       
+      }
+
+      $this->dataInfo['p'] = 1;
+      if (isset($_GET['p']) && !empty($_GET['p'])) {
+        $this->dataInfo['p'] = intval($_GET['p']);
+        if ($this->dataInfo['p'] == 0) {
+          $this->dataInfo['p'] = 1;
+        }
+      }
+
+      $offset = (10 * ($this->dataInfo['p'] - 1));
+
+      $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario($this->id_inv_situacao, $this->user->getCompany(), $this->dataInfo['filtro']);
+      $this->dataInfo['p_count']          = ceil($this->dataInfo['inventario_count'] / 10);
+
+      $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->dataInfo['filtro'], $this->user->getCompany());
+
+
 
 
       //if($this->mobile == false){
@@ -45,86 +74,6 @@ class InventarioController extends controller
       // $this->loadTemplate($this->dataInfo['pageController'] . "/index_mobile", $this->dataInfo);
       //}
     } else { }
-  }
-
-  public function getAll()
-  {
-    $tabela = $this->inventario->getAll($_REQUEST, $this->user->getCompany());
-
-    $data = array();
-
-    if ($tabela) {
-      foreach ($tabela as $list) {
-
-        $situacao = $this->inventario->getleilaoON($list['id_inventario']);
-
-        $sit = !empty($situacao) ? '<span class="label label-danger">' . $situacao['descricao_situacao'] . '</span' : '';
-
-        $venda = ($list['inv_venda'] == '1') ? '<span class="label label-danger">Vendido</span>' : '<span class="label label-success">Não Vendido</span>';
-
-        $descricao = !empty($list['inv_descricao']) ? $list['inv_descricao'] . ' - ' : '';
-        $tecnica = !empty($list['nome_tecnica']) ? ucfirst($list['nome_tecnica']) . ' - ' : '';
-        $assinatura = !empty($list['inv_assinatura']) ? $list['inv_assinatura'] . ' - ' : '';
-        $invData = !empty($list['inv_data']) ? $list['inv_data'] . ' - ' : '';
-        $tamanho = !empty($list['inv_tamanho']) ? $list['inv_tamanho'] . ' - ' : '';
-        $tiragem = !empty($list['inv_tiragem']) ? $list['inv_tiragem'] : '';
-
-        $artista = str_replace(' ', '_', $list['art_nome']);
-
-        $img = '';
-
-        if (!empty($list['url'])) {
-          $img = '<img src="' . BASE_URL . '/assets/images/anuncios/' . $artista . '/' . $list["url"] . ' " class="img-table" style="width:30%"/>';
-        }
-
-        $row = array();
-        $row[] =
-          ' <a class="btn btn-sm btn-info" href="' . BASE_URL . 'inventario/edit/' . $list['id_inventario'] . '" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
-            <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Edit" onclick="edit_person(' . "'" . $list['id_inventario'] . "'" . ')"><i class="glyphicon glyphicon-trash"></i></a>
-        ';
-        $row[] = $img . ' ' . ucfirst($list['art_nome']);
-
-        $row[] = ($descricao . $tecnica . $assinatura . $invData . $tamanho . $tiragem);
-
-        $row[] = ($venda) . ($sit);
-        $row[] = ($list['inv_venda']);
-        $row[] = ($list['id_inventario']);
-
-
-
-        $data[] = $row;
-      }
-
-      $total = $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario('', $this->user->getCompany(), $this->dataInfo['filtro']);
-    }
-
-    if (isset($_POST['search']['value']) && !empty($_POST['search']['value']) && $tabela) {
-      $total = count($tabela);
-    }
-
-    if (!$tabela) {
-      $total = 0;
-    }
-    
-
-
-    $output = array(
-      "draw" => $_POST['draw'],
-      "recordsTotal" => $total,
-      "recordsFiltered" =>  $total,
-      "data" => $data,
-    );
-
-    echo json_encode($output);
-  }
-
-  public function edit($id)
-  {
-    $this->dataInfo['tecnica']      = $this->tecnica->getAll('', $this->user->getCompany());
-
-    $this->dataInfo['inv'] = $this->inventario->getInventarioById($id, $this->user->getCompany());
-
-    $this->loadTemplate($this->dataInfo['pageController'] . "/modalVisualizar", $this->dataInfo);
   }
 
   public function add()
@@ -140,8 +89,8 @@ class InventarioController extends controller
     }
 
     if ($this->user->getName() == 'marcio') {
-      //$this->dataInfo['parametroSituacao'] = $this->parametro->getSituacaoOn();
-      //$this->dataInfo['parametroProcedencia'] = $this->parametro->getProcedenciaOn();
+      $this->dataInfo['parametroSituacao'] = $this->parametro->getSituacaoOn();
+      $this->dataInfo['parametroProcedencia'] = $this->parametro->getProcedenciaOn();
 
       $this->loadTemplate($this->dataInfo['pageController'] . "/marcio/modalCadastro", $this->dataInfo);
     } else {
@@ -220,31 +169,40 @@ class InventarioController extends controller
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   public function addValicao($result)
   {
 
-    return true;
+    if (isset($result['inventario_add']['mensagem']['sucess']) && isset($result['mercadolivre_add']['mensagem']['sucess'])) {
+      $_SESSION['form']['success'] = 'Success';
+      $_SESSION['form']['type'] = 'success';
+      $_SESSION['form']['mensagem'] = "Cadastro no inventario e no mercado livre efetuado com sucesso!!";
+    } elseif (isset($result['inventario_add']['mensagem']['error']) && isset($result['mercadolivre_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Oops!!';
+      $_SESSION['form']['type'] = 'error';
+      $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro no inventario nem no mercado livre!";
+    } elseif (isset($result['inventario_add']['mensagem']['sucess']) && isset($result['mercadolivre_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Sucess';
+      $_SESSION['form']['type'] = 'warning';
+      $_SESSION['form']['mensagem'] = "Cadastro efetuado no inventario mas deu erro no mercado livre!";
+    } elseif (isset($result['inventario_add']['mensagem']['sucess'])) {
+      $_SESSION['form']['success'] = 'Sucess';
+      $_SESSION['form']['type'] = 'success';
+      $_SESSION['form']['codigo'] = 'Codigo: ';
+      $_SESSION['form']['mensagem'] = "Cadastro efetuado com sucesso";
+    } elseif (isset($result['inventario_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Oops!!';
+      $_SESSION['form']['type'] = 'error';
+      $_SESSION['form']['mensagem'] = "Não foi possivel fazer o cadastro";
+    } elseif (isset($result['mercadolivre_add']['mensagem']['sucess'])) {
+      $_SESSION['form']['success'] = 'Sucess!!';
+      $_SESSION['form']['type'] = 'success';
+      $_SESSION['form']['mensagem'] = "Cadastro no mercado livre efetuado com sucesso!!";
+    } elseif (isset($result['mercadolivre_add']['mensagem']['error'])) {
+      $_SESSION['form']['success'] = 'Oops!!';
+      $_SESSION['form']['type'] = 'error';
+      $_SESSION['form']['mensagem'] = "erro no mercado livre!";
+    }
+
+    return $_SESSION['form'];
   }
 }

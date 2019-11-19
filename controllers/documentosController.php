@@ -8,6 +8,8 @@ class documentosController extends controller
         parent::__construct();
 
         $this->user = new Users();
+        $this->painel = new Painel();
+
         $this->documento = new Documentos();
         $this->user->setLoggedUser();
 
@@ -28,6 +30,7 @@ class documentosController extends controller
     {
 
         if ($this->user->hasPermission('documento_view')) {
+
 
             if (isset($_GET['filtros'])) {
                 $this->filtro = $_GET['filtros'];

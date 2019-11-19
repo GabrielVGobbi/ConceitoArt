@@ -14,6 +14,9 @@ Class Relatorio extends model {
 	}
 
 	public function getRelatorioByFiltro($filtro){
+
+		
+
 		$this->where = $this->buildWhere($filtro);
 		
 		$sql = "SELECT * 

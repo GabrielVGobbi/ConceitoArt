@@ -3,11 +3,6 @@ class Inventario extends model
 {
 
   private $InvetarioInfo;
-  
-  var $table = 'inventario'; //nome da tabela
-	var $column = array(0=>'inv.id_inventario',1=>'art.art_nome'); //ordem das colunas
-	var $column_search = array('cli_nome','cli_sorenome','cli_email'); //colunas para pesquisas
-	var $order = array('id' => 'desc'); // order padrão
 
   public function __construct()
   {
@@ -33,8 +28,8 @@ class Inventario extends model
 
 
     $sql = "SELECT COUNT(*) AS c FROM inventario inv 
-        INNER JOIN artista art ON (inv.id_artista = art.id_artista)
-        INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+    INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+    INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 
         
         WHERE " . implode(' AND ', $where);
@@ -51,37 +46,38 @@ class Inventario extends model
     return $r;
   }
 
-  public function getAll($filtro, $id_company)
+  public function getAll($offset, $filtro, $id)
   {
-    $start = isset($filtro['start']) ? $filtro['start'] : '0';
-    $length = isset($filtro['length']) ? $filtro['length'] : '10';
 
-    $order =  !empty($this->column[$filtro['order'][0]['column']]) ? " ORDER BY " . $this->column[$filtro['order'][0]['column']] . " " . 'DESC' : ' ORDER BY inv.id_inventario DESC';
+    $where = $this->buildWhere($filtro, $id);
 
-    $where = $this->buildWhere($filtro, $id_company);
-
-    $sql = (" 
-            
-    SELECT inv.*,img.url, art.art_nome, tec.nome_tecnica, 
+    $sql = "
+    SELECT inv.*, art.art_nome, tec.nome_tecnica, 
     proc.id_procedencia, proc.descricao,proc.inventario_preco, proc.data
             FROM  procedencia proc
             RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
             INNER JOIN artista art ON (inv.id_artista = art.id_artista)
             INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
-            LEFT JOIN inventario_image img ON (inv.id_inventario = img.id_inventario)
-      WHERE 
-    
-    " . implode(' AND ', $where) . $order . " LIMIT " . $start . " ," . $length);
 
+        
+        WHERE " . implode(' AND ', $where) . " GROUP BY inv.id_inventario ORDER BY inv.id_inventario  DESC LIMIT $offset, 10";
     $sql = $this->db->prepare($sql);
 
     $this->bindWhere($filtro, $sql);
 
+
+
+
     $sql->execute();
 
-    $this->retorno = ($sql->rowCount() > 0) ? $sql->fetchAll() : '';
+    if ($sql->rowCount() > 0) {
+        $this->array = $sql->fetchAll();
 
-    return $this->retorno;
+       
+        
+    }
+
+    return $this->array;
   }
 
   public function getID($offset, $filtro, $id)
@@ -107,7 +103,10 @@ class Inventario extends model
     $sql->execute();
 
     if ($sql->rowCount() > 0) {
-      $this->array = $sql->fetchAll();
+        $this->array = $sql->fetchAll();
+
+       
+        
     }
 
     return $this->array;
@@ -124,12 +123,17 @@ class Inventario extends model
         SELECT *  FROM inventario inv 
         INNER JOIN artista art ON (inv.id_artista = art.id_artista)
         INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+        INNER JOIN inventario_image img ON (inv.id_inventario = img.id_inventario)
 
         
-        WHERE " . implode(' AND ', $where) . " ORDER BY inv.id_inventario DESC ";
+        WHERE " . implode(' AND ', $where);
+
+
     $sql = $this->db->prepare($sql);
 
     $this->bindWhere($filtro, $sql);
+
+
 
     $sql->execute();
 
@@ -145,7 +149,7 @@ class Inventario extends model
   {
 
     $where = array(
-      'inv.id_company=1' 
+      'inv.id_company=' . $id
     );
 
 
@@ -162,7 +166,7 @@ class Inventario extends model
 
       if ($filtro['artista'] != '') {
 
-        $where[] = "art.art_nome = :art_nome";
+        $where[] = "art.art_nome LIKE :art_nome";
       }
     }
 
@@ -190,21 +194,12 @@ class Inventario extends model
       }
     }
 
-    if (!empty($filtro['search']['value'])) {
-
-      if ($filtro['search']['value'] != '') {
-
-        $where[] = "(inv.id_inventario LIKE :tudo) OR (inv_descricao LIKE :tudo) OR (inv_tiragem LIKE :tudo) OR (tec.nome_tecnica LIKE :tudo) OR (art.art_nome LIKE :tudo)";
-      }
-    }
-
-
-
     return $where;
   }
 
   private function bindWhere($filtro, &$sql)
   {
+
 
     if (!empty($filtro['id_inventario'])) {
       $sql->bindValue(":id_inventario", $filtro['id_inventario']);
@@ -220,13 +215,13 @@ class Inventario extends model
 
     if (!empty($filtro['artista'])) {
       if ($filtro['artista'] != '') {
-        $sql->bindValue(":art_nome",  $filtro['artista']);
+        $sql->bindValue(":art_nome", '%' . $filtro['artista'] . '%');
       }
     }
 
     if (!empty($filtro['titulo'])) {
       if ($filtro['titulo'] != '') {
-        $sql->bindValue(":tudo", '%' . $filtro['titulo'] . '%');
+        $sql->bindValue(":inv_descricao", '%' . $filtro['titulo'] . '%');
       }
     }
 
@@ -238,12 +233,6 @@ class Inventario extends model
           $filtro['venda'] == '1';
         }
         $sql->bindValue(":venda", $filtro['venda']);
-      }
-    }
-
-    if (!empty($filtro['search']['value'])) {
-      if ($filtro['search']['value'] != '') {
-        $sql->bindValue(":tudo", '%' . $filtro['search']['value'] . '%');
       }
     }
   }
@@ -258,6 +247,7 @@ class Inventario extends model
 
     $visivel = isset($Parametros['visivel']) ? $Parametros['visivel'] : '1';
     $etiqueta = isset($Parametros['etiqueta']) ? $Parametros['etiqueta'] : '1';
+
 
     $titulo                     = controller::ReturnValor($Parametros['titulo']);
     $assinatura                 = controller::ReturnValor($Parametros['assinatura']);
@@ -531,7 +521,7 @@ class Inventario extends model
 
     $sql->execute();
 
-
+    
     try {
 
       $sql = $this->db->prepare("UPDATE inventario SET
@@ -579,7 +569,7 @@ class Inventario extends model
     $id_situacao = $situacao['id_situacao'];
 
 
-    $sql = $this->db->prepare("UPDATE situacao_obra SET 
+        $sql = $this->db->prepare("UPDATE situacao_obra SET 
 
             id_company             = :id_company,  
             id_user                = :id_user, 
@@ -594,19 +584,19 @@ class Inventario extends model
 
             ");
 
-    $sql->bindValue(":id_company",          $id_company);
-    $sql->bindValue(":id_situacao",         $id_situacao);
-    $sql->bindValue(":id_user",             $id_user);
-    $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
-    $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
-    $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
-    $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
-    $sql->bindValue(":retirada",            $situacao['edit_retirada']);
-    $sql->bindValue(':codigo',   $situacao['codigo']);
+        $sql->bindValue(":id_company",          $id_company);
+        $sql->bindValue(":id_situacao",         $id_situacao);
+        $sql->bindValue(":id_user",             $id_user);
+        $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
+        $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
+        $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
+        $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
+        $sql->bindValue(":retirada",            $situacao['edit_retirada']);
+        $sql->bindValue(':codigo',   $situacao['codigo']);
 
 
 
-    $sql->execute();
+        $sql->execute();
 
 
     try {
@@ -831,8 +821,8 @@ class Inventario extends model
             list($width_orig, $height_orig) = getimagesize('assets/images/anuncios/' . $artista . '/' . $tmpname);
             $ratio = $width_orig / $height_orig;
 
-            $width = 650;
-            $height = 650;
+            $width = 500;
+            $height = 500;
 
             if ($width / $height > $ratio) {
               $width = $height * $ratio;
@@ -873,7 +863,7 @@ class Inventario extends model
     $sql->bindValue(":id", $id);
     $sql->execute();
 
-    if ($sql->rowCount() == 1) {
+    if ($sql->rowCount() > 0) {
       $this->array = $sql->fetch();
     }
 
@@ -954,20 +944,19 @@ class Inventario extends model
   public function getInventarioById($id_inventario, $id_company)
   {
 
-    $sql = $this->db->prepare("SELECT *, inv.id_inventario as id_inventario
-        FROM  procedencia proc
-        RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
-        INNER JOIN artista art ON (inv.id_artista = art.id_artista)
-        INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
-        LEFT JOIN inventario_image img ON (img.id_inventario = inv.id_inventario)
-        WHERE inv.id_company = :id_company AND inv.id_inventario = :id_inventario LIMIT 1");
+    $sql = $this->db->prepare("SELECT * FROM inventario inv
+
+            INNER JOIN artista  art ON (inv.id_artista = art.id_artista) 
+            INNER JOIN tecnica tec ON (tec.id_tecnica = inv.id_tecnica) 
+
+            WHERE inv.id_company = :id_company AND inv.id_inventario = :id_inventario");
 
     $sql->bindValue(':id_company', $id_company);
     $sql->bindValue(':id_inventario', $id_inventario);
     $sql->execute();
 
-    if ($sql->rowCount() == 1) {
-      $this->array = $sql->fetch();
+    if ($sql->rowCount() > 0) {
+      $this->array = $sql->fetchAll();
     }
 
     return $this->array;
