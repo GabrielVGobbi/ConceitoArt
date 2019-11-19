@@ -38,7 +38,7 @@
   <script src="<?php echo BASE_URL; ?>node_modules/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://unpkg.com/imask"></script>
   <script type="text/javascript">
-    var BASE_URL = '<?php echo BASE_URL; ?>'
+    var BASE_URL = '<?php echo BASE_URL; ?>';
   </script>
 
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/bower_components/select2/dist/css/select2.min.css">
@@ -90,9 +90,9 @@
                 <li class="active"><a href="<?php echo BASE_URL; ?>financeiro">Financeiro <span class="sr-only">(current)</span></a></li>
               <?php endif; ?>
 
-              <?php if ($this->userInfo['user']->hasPermission('mercadolivre_view')) : ?>
+              
                 <li class="active"><a href="<?php echo BASE_URL; ?>fotos">Fotos <span class="sr-only">(current)</span></a></li>
-              <?php endif; ?>
+             
 
               <?php if ($this->userInfo['user']->hasPermission('documento_view')) : ?>
                 <li class="active"><a href="<?php echo BASE_URL; ?>documentos">Documentos <span class="sr-only">(current)</span></a></li>
