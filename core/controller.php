@@ -207,6 +207,20 @@ class controller
         }
     }
 
+    public function getProcedencia($id_inventario)
+    {
+        
+        $u = new Inventario;
+
+        $array = $u->getProcedencia($id_inventario);
+        if(count($array) > 0){
+            
+            return $array;
+        }else {
+            return 0;
+        }
+    }
+
 
 
 }

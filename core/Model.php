@@ -2,6 +2,9 @@
 class Model {
 	
 	protected $db;
+	protected $table;
+
+
 
 	public function __construct() {
 		global $config;
