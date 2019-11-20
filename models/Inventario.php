@@ -13,6 +13,23 @@ class Inventario extends model
     $this->retorno = array();
   }
 
+  public function getProcedencia($id)
+  {
+    $sql = "
+      SELECT * FROM procedencia proc
+      WHERE proc.id_inventario = :id LIMIT 1 ";
+    $sql = $this->db->prepare($sql);
+    $sql->bindValue(":id", $id);
+
+    $sql->execute();
+
+    if ($sql->rowCount() == 1) {
+      $this->array = $sql->fetch();
+    }
+
+    return $this->array;
+  }
+
   public function getCountInventario($id_inv_situacao, $id, $filtro)
   {
 
@@ -52,10 +69,9 @@ class Inventario extends model
     $where = $this->buildWhere($filtro, $id);
 
     $sql = "
-    SELECT inv.*, art.art_nome, tec.nome_tecnica, 
-    proc.id_procedencia, proc.descricao,proc.inventario_preco, proc.data
-            FROM  procedencia proc
-            RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
+    SELECT inv.*, art.art_nome, tec.nome_tecnica FROM
+    
+            inventario inv 
             INNER JOIN artista art ON (inv.id_artista = art.id_artista)
             INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 
