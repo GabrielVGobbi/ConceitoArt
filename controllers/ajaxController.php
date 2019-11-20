@@ -50,7 +50,6 @@ class ajaxController extends controller {
 
         if(isset($_POST['name']) && !empty($_POST['name'])) {
 
-            error_log(print_r($_POST,1));
             $Parametros['artista'] = addslashes($_POST['name']);
 
             $data['id'] = $a->add($u->getCompany(), $Parametros);

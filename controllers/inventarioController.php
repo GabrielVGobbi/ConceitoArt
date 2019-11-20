@@ -28,9 +28,8 @@ class InventarioController extends controller
     $this->dataInfo['errorForm'] = array();
     $this->dataInfo = array(
       'pageController' => 'inventario',
-      'user' => $this->user->getInfo($this->user->getId(), $this->user->getCompany()),
       'filtro' => array(),
-      'tableDados' =>array(),
+      'tableDados' => array(),
       'p_count' => 1,
       'inventario_count' => 0
     );
@@ -40,39 +39,21 @@ class InventarioController extends controller
   {
 
     if ($this->user->hasPermission('inventario_view')) {
-      
+
       $this->dataInfo['artista']      = $this->artista->getAll('', $this->user->getCompany());
       $this->dataInfo['tecnica']      = $this->tecnica->getAll('', $this->user->getCompany());
-      
+
       if (isset($_GET['filtros'])) {
         $this->dataInfo['filtro'] = $_GET['filtros'];
-
-       
       }
 
-      $this->dataInfo['p'] = 1;
-      if (isset($_GET['p']) && !empty($_GET['p'])) {
-        $this->dataInfo['p'] = intval($_GET['p']);
-        if ($this->dataInfo['p'] == 0) {
-          $this->dataInfo['p'] = 1;
-        }
-      }
+      $this->inventario->maxPerPage(10);
 
-      $offset = (10 * ($this->dataInfo['p'] - 1));
+      $this->dataInfo['tableDados'] = $this->inventario->paginate($this->dataInfo['filtro'],$this->user->getCompany());
+      $this->dataInfo['links'] = $this->inventario->createLinks();
 
-      $this->dataInfo['inventario_count'] = $this->inventario->getCountInventario($this->id_inv_situacao, $this->user->getCompany(), $this->dataInfo['filtro']);
-      $this->dataInfo['p_count']          = ceil($this->dataInfo['inventario_count'] / 10);
-
-      $this->dataInfo['tableDados']   = $this->inventario->getAll($offset, $this->dataInfo['filtro'], $this->user->getCompany());
-
-
-
-
-      //if($this->mobile == false){
       $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
-      //}else {
-      // $this->loadTemplate($this->dataInfo['pageController'] . "/index_mobile", $this->dataInfo);
-      //}
+
     } else { }
   }
 

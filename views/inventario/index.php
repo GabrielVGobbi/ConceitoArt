@@ -21,7 +21,7 @@ include("modalCadastrar.php");
         <div class="box-body  " style="margin-bottom: 10px;">
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-bordered">
-                    <?php if (count($tableDados) > 0) : ?>
+                    <?php if ($tableDados) : ?>
                     <tbody>
                         <thead class="thead-dark">
                             <tr>
@@ -81,7 +81,7 @@ include("modalCadastrar.php");
                     </tbody>
                     <?php else : ?>
                     <tr>
-                        <td style="width: 50%;text-align: center;"> Faça uma pesquisa por artista ou descrição </td>
+                        <td style="width: 50%;text-align: center;"> nenhum resultado encontrado </td>
                     </tr>
                     <?php endif; ?>
                 </table>
@@ -95,16 +95,7 @@ include("modalCadastrar.php");
 
 
                 <ul class="pagination pagination-sm pull-right">
-                    <?php
-                    for ($q = 1; $q <= $p_count; $q++) : ?>
-                    <li class="<?php echo ($q == $p) ? 'active' : '' ?> "><a href="<?php echo BASE_URL; ?>inventario?p=<?php
-                                                                                                                            $w = $_GET;
-                                                                                                                            $w['p'] = $q;
-                                                                                                                            echo http_build_query($w);
-                                                                                                                            ?>
-                              "><?php echo $q; ?></a></li>
-                    <?php endfor; ?>
-
+                    <?php if(!empty($links)) echo $links; ?>
                 </ul>
 
             </div>

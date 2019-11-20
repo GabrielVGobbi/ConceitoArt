@@ -113,32 +113,36 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Procêdencia de Compra</h3>
                                     </div>
-                                    <div class="box-body" style="">
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <label>Procêdencia</label>
-                                                <input type="text" class="form-control" name="procedencia" id="procedencia" autocomplete="off" value="<?php echo $inv['descricao']; ?>">
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-2">
-                                            <label>Data</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="data_procedencia" id="data_procedencia" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo $inv['data']; ?>">
+                                    <?php $proc = controller::getProcedencia($inv['id_inventario']); ?> 
+                                    <?php if($proc): ?>
+                                        <div class="box-body" style="">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label>Procêdencia</label>
+                                                    <input type="text" class="form-control" name="procedencia" id="procedencia" autocomplete="off" value="<?php echo $proc['descricao']; ?>">
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label>Preço</label>
-                                                <?php if ($inv['inventario_preco'] == '') : ?>
-                                                    <input type="text" class="form-control" name="preco_procedencia" id="preco_procedencia" autocomplete="off" value="R$ <?php echo ($inv['inventario_preco'] != '' ? number_format($inv['inventario_preco'], 2, ',', '.') : '') ?>">
-                                                <?php else : ?>
-                                                    <input type="text" class="form-control" name="preco_procedencia" id="preco_procedencia" autocomplete="off" value="R$ <?php echo ($inv['inventario_preco'] != '' ? number_format($inv['inventario_preco'], 2, ',', '.') : '') ?>">
-                                                <?php endif; ?>
+                                            <div class="col-md-2">
+                                                <label>Data</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="data_procedencia" id="data_procedencia" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo $proc['data']; ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Preço</label>
+                                                    <?php if ($proc['inventario_preco'] == '') : ?>
+                                                        <input type="text" class="form-control" name="preco_procedencia" id="preco_procedencia" autocomplete="off" value="R$ <?php echo ($proc['inventario_preco'] != '' ? number_format($proc['inventario_preco'], 2, ',', '.') : '') ?>">
+                                                    <?php else : ?>
+                                                        <input type="text" class="form-control" name="preco_procedencia" id="preco_procedencia" autocomplete="off" value="R$ <?php echo ($proc['inventario_preco'] != '' ? number_format($proc['inventario_preco'], 2, ',', '.') : '') ?>">
+                                                    <?php endif; ?>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

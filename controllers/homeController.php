@@ -18,8 +18,8 @@ class homeController extends controller {
        
         if($this->user->isLogged() == false){
 
-            header("Location: ".BASE_URL."login");
-            exit();
+            exit(header("Location: ".BASE_URL."login"));
+           
         }
 
 

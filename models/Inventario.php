@@ -2,7 +2,14 @@
 class Inventario extends model
 {
 
+  
+
   private $InvetarioInfo;
+  
+  var $table = 'inventario';
+
+  use Pagination;
+  
 
   public function __construct()
   {
@@ -52,10 +59,10 @@ class Inventario extends model
     $where = $this->buildWhere($filtro, $id);
 
     $sql = "
-    SELECT inv.*, art.art_nome, tec.nome_tecnica, 
-    proc.id_procedencia, proc.descricao,proc.inventario_preco, proc.data
-            FROM  procedencia proc
-            RIGHT JOIN inventario inv ON (inv.id_inventario = proc.id_inventario)
+    SELECT inv.*, art.art_nome, tec.nome_tecnica
+    
+            FROM  inventario inv
+           
             INNER JOIN artista art ON (inv.id_artista = art.id_artista)
             INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
 
@@ -103,10 +110,7 @@ class Inventario extends model
     $sql->execute();
 
     if ($sql->rowCount() > 0) {
-        $this->array = $sql->fetchAll();
-
-       
-        
+        $this->array = $sql->fetchAll();    
     }
 
     return $this->array;
@@ -197,44 +201,32 @@ class Inventario extends model
     return $where;
   }
 
-  private function bindWhere($filtro, &$sql)
-  {
+  private function Filds($filtro){
 
+    $placesValues = array();
 
     if (!empty($filtro['id_inventario'])) {
-      $sql->bindValue(":id_inventario", $filtro['id_inventario']);
-    }
-
-    if (!empty($filtro['id_inv_situacao'])) {
-      $sql->bindValue(":id_inv_situacao", $filtro['id_inv_situacao']);
-    }
-
-    if (!empty($filtro['procedencia'])) {
-      $sql->bindValue(":procedencia", '%' . $filtro['procedencia'] . '%');
+      $placesValues += (["id_inventario" => $filtro['id_inventario']]);
     }
 
     if (!empty($filtro['artista'])) {
-      if ($filtro['artista'] != '') {
-        $sql->bindValue(":art_nome", '%' . $filtro['artista'] . '%');
-      }
+      $placesValues += (["art_nome" => $filtro['artista']]);
     }
 
     if (!empty($filtro['titulo'])) {
-      if ($filtro['titulo'] != '') {
-        $sql->bindValue(":inv_descricao", '%' . $filtro['titulo'] . '%');
-      }
+      $placesValues += (["inv_descricao" => $filtro['titulo']]);
+    }
+
+    if (!empty($filtro['procedencia'])) {
+      $placesValues += (["procedencia" => $filtro['procedencia']]);
     }
 
     if (!empty($filtro['venda'])) {
-      if ($filtro['venda'] != '') {
-        if ($filtro['venda'] == '2') {
-          $filtro['venda'] = '0';
-        } else {
-          $filtro['venda'] == '1';
-        }
-        $sql->bindValue(":venda", $filtro['venda']);
-      }
+      $placesValues += (["venda" => $filtro['venda']]);
     }
+
+    $this->bindValues($placesValues);
+
   }
 
   public function add($id_company, $id_user, $Parametros, $photo)
@@ -905,6 +897,25 @@ class Inventario extends model
 
     return $this->array;
   }
+
+  public function getProcedencia($id)
+  {
+    $sql = "
+      SELECT * FROM procedencia proc
+      WHERE proc.id_inventario = :id LIMIT 1 ";
+    $sql = $this->db->prepare($sql);
+    $sql->bindValue(":id", $id);
+
+    $sql->execute();
+
+    if ($sql->rowCount() == 1) {
+      $this->array = $sql->fetch();
+    }
+
+    return $this->array;
+  }
+
+  
 
   public function getImagesByProduct($id)
   {

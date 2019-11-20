@@ -38,15 +38,23 @@ class documentosController extends controller
 
             $this->dataInfo['p'] = 1;
             if (isset($_GET['p']) && !empty($_GET['p'])) {
-              $this->dataInfo['p'] = intval($_GET['p']);
+              
+                $this->dataInfo['p'] = intval($_GET['p']);
+
               if ($this->dataInfo['p'] == 0) {
                 $this->dataInfo['p'] = 1;
               }
             }
 
+
+            
+
             $this->dataInfo['tableDados'] = $this->documento->getAll($this->filtro, $this->user->getCompany());
             $this->dataInfo['getCount']   = $this->documento->getCount($this->user->getCompany());
             $this->dataInfo['p_count']    = ceil($this->dataInfo['getCount'] / 10);
+
+            
+
 
 
             $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
