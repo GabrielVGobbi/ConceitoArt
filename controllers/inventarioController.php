@@ -1,8 +1,11 @@
 <?php
+
 class InventarioController extends controller
 {
 
   private $user;
+
+  
 
   public function __construct()
   {
@@ -46,11 +49,17 @@ class InventarioController extends controller
       if (isset($_GET['filtros'])) {
         $this->dataInfo['filtro'] = $_GET['filtros'];
       }
+      $inventario = new Inventario();
 
-      $this->inventario->maxPerPage(10);
+      $inventario->maxPerPage(10);
+      $inventario->maxLinks(3);
 
-      $this->dataInfo['tableDados'] = $this->inventario->paginate($this->dataInfo['filtro'],$this->user->getCompany());
-      $this->dataInfo['links'] = $this->inventario->createLinks();
+
+      $this->dataInfo['tableDados'] = $inventario->paginate($this->dataInfo['filtro'],$this->user->getCompany());
+      $this->dataInfo['total'] = $inventario->getCountInventario('',$this->user->getCompany());
+
+      
+      $this->dataInfo['links'] = $inventario->createLinks();
 
       $this->loadTemplate($this->dataInfo['pageController'] . "/index", $this->dataInfo);
 
@@ -88,12 +97,14 @@ class InventarioController extends controller
       if (isset($_POST['id_tecnica']) && $_POST['id_tecnica'] != '') {
 
         $result = $this->inventario->add($this->user->getCompany(), $this->user->getId(), $_POST, $_FILES['fotos']);
+
+        if($result){
+          header('Location:' . BASE_URL . 'inventario', false);
+          exit();
+        }
       }
 
-      $this->addValicao($result);
-
-      header('Location:' . BASE_URL . 'inventario');
-      exit();
+      
     }
   }
 

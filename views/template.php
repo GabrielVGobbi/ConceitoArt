@@ -38,7 +38,7 @@
       <nav class="navbar ">
         <div class="container">
           <div class="navbar-header">
-            <a href="/admin" class="navbar-brand"><b>Admin</b>Gallery</a>
+            <a href="/admin/home" class="navbar-brand"><b>Admin</b>Gallery</a>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
               <i class="fa fa-bars"></i>
             </button>

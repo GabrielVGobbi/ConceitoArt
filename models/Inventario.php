@@ -1,14 +1,17 @@
 <?php
+
+
+
 class Inventario extends model
 {
-
+  use Pagination;
   
 
   private $InvetarioInfo;
   
   var $table = 'inventario';
 
-  use Pagination;
+
   
 
   public function __construct()
@@ -20,34 +23,20 @@ class Inventario extends model
     $this->retorno = array();
   }
 
-  public function getCountInventario($id_inv_situacao, $id, $filtro)
+  public function getCountInventario($id_inv_situacao, $id)
   {
 
     $r = 0;
 
-    if ($id_inv_situacao == '' || $id_inv_situacao == 0) {
-      $where = '';
-    } elseif ($id_inv_situacao == 1 || $id_inv_situacao == 2) {
-      $where = ' AND id_inv_situacao = :id_inv_situacao';
-    }
-
-    $where = $this->buildWhere($filtro, $id);
-
-
     $sql = "SELECT COUNT(*) AS c FROM inventario inv 
-    INNER JOIN artista art ON (inv.id_artista = art.id_artista)
-    INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+            INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+            INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)    
+          ";
 
-        
-        WHERE " . implode(' AND ', $where);
     $sql = $this->db->prepare($sql);
-
-
-    $this->bindWhere($filtro, $sql);
-
     $sql->execute();
-    $row = $sql->fetch();
 
+    $row = $sql->fetch();
     $r = $row['c'];
 
     return $r;

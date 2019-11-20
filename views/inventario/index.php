@@ -87,7 +87,7 @@ include("modalCadastrar.php");
                 </table>
             </div>
             <div class="pull-left" style="right: 10px;">
-                <p> Quantidade de obras: <?php echo $inventario_count; ?> </p>
+                <p> Quantidade de obras: <?php echo $total; ?> </p>
             </div>
         </div>
         <div class="box-footer no-padding">
