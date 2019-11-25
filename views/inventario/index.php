@@ -1,8 +1,6 @@
 <?php
-include_once("filtro.php");
-include("modalCadastrar.php");
-
-
+    include_once("filtro.php");
+    include("modalCadastrar.php");
 ?>
 
 <div class="col-xs-12">
@@ -25,7 +23,6 @@ include("modalCadastrar.php");
                     <tbody>
                         <thead class="thead-dark">
                             <tr>
-                                <!-- <th class="scope"><input type="checkbox" id="marcarTodos" /></th> -->
                                 <th class="scope" style="    width: 14%;">Ação</th>
                                 <th class="scope" style="width: 38%;">Imagem / Artista</th>
                                 <th class="scope">Descrição</th>
