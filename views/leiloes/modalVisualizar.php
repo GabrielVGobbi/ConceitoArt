@@ -13,33 +13,69 @@
                         </button>
                         <h2 class="modal-title fc-center" align="center" id=""><?php echo $cli['leilao_nome']; ?></h2>
                     </div>
-
-                    <div class="modal-body">
-                        <div class="box box-default box-solid">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Dados</h3>
-                                    </div>
-                                    <div class="box-body" style="">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>Nome</label>
-                                                <input type="text" class="form-control" name="leilao_nome" id="leilao_nome" autocomplete="off" value="<?php echo $cli['leilao_nome']; ?>">
-                                            </div>
+                    <?php if($this->userInfo['userName']['id_company'] == 1): ?>
+                        <div class="modal-body">
+                            <div class="box box-default box-solid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Dados</h3>
                                         </div>
-
-                                         <div class="col-md-8">
-                                            <div class="form-group">
-                                                <label>Endereço</label>
-                                                <input type="text" class="form-control" name="leilao_endereco" id="leilao_endereco" autocomplete="off" value="<?php echo ( isset($cli['leilao_endereco'])) ? $cli['leilao_endereco'] : ''; ?>">
+                                        <div class="box-body" style="">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Nome</label>
+                                                    <input type="text" class="form-control" name="leilao_nome" id="leilao_nome" autocomplete="off" value="<?php echo $cli['leilao_nome']; ?>">
+                                                </div>
                                             </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Preço</label>
+                                                    <input type="text" class="form-control" name="leilao_preco" id="leilao_preco" autocomplete="off" value="<?php echo ( isset($cli['leilao_preco'])) ? number_format($cli['leilao_preco'], 2, ',', '.')   : ''; ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Compras</label>
+                                                    <input type="text" class="form-control" name="leilao_compras" id="leilao_compras" autocomplete="off" value="<?php echo ( isset($cli['leilao_compras'])) ? $cli['leilao_compras'] : ''; ?>">
+                                                </div>
+                                            </div>
+    
                                         </div>
-  
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                    <?php else: ?>
+                        <div class="modal-body">
+                            <div class="box box-default box-solid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Dados</h3>
+                                        </div>
+                                        <div class="box-body" style="">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Nome</label>
+                                                    <input type="text" class="form-control" name="leilao_nome" id="leilao_nome" autocomplete="off" value="<?php echo $cli['leilao_nome']; ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Endereço</label>
+                                                    <input type="text" class="form-control" name="leilao_endereco" id="leilao_endereco" autocomplete="off" value="R$ <?php echo ( isset($cli['leilao_endereco'])) ? $cli['leilao_endereco']   : ''; ?>">
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <?php endif; ?>
 
 
                         

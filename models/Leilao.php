@@ -85,14 +85,23 @@ class Leilao extends model
 		$leilao_nome = $Parametros['leilao_nome'];
 		$leilao_endereco = $Parametros['leilao_endereco'];
 
+		$leilao_preco = isset($Parametros['leilao_preco']) ? $Parametros['leilao_preco'] : '';
+		$leilao_compra = isset($Parametros['leilao_compras']) ? $Parametros['leilao_compras'] : '';
+
+
 		$sql = $this->db->prepare("INSERT INTO leilao SET 
 					leilao_nome = :leilao_nome, 
 					leilao_endereco = :leilao_endereco,
+					leilao_compras = :leilao_compra,
+					leilao_preco = :leilao_preco,
+
 					id_company = :id_company
 			
 				");
 
 		$sql->bindValue(":leilao_nome", $leilao_nome);
+		$sql->bindValue(":leilao_compra", $leilao_compra);
+		$sql->bindValue(":leilao_preco", $leilao_preco);
 
 		$sql->bindValue(":leilao_endereco", $leilao_endereco);
 		$sql->bindValue(":id_company", $id_company);
@@ -126,17 +135,23 @@ class Leilao extends model
 		$leilao_endereco = $Parametros['leilao_endereco'];
 		$id_leilao = $Parametros['id_leilao'];
 
+		$leilao_preco = isset($Parametros['leilao_preco']) ? $Parametros['leilao_preco'] : '';
+		$leilao_compra = isset($Parametros['leilao_compras']) ? $Parametros['leilao_compras'] : '';
+
 		if (isset($Parametros['id_leilao']) && $Parametros['id_leilao'] != '') {
 
 			$sql = $this->db->prepare("UPDATE leilao SET 
 				leilao_nome = :leilao_nome, 
 				leilao_endereco = :leilao_endereco,
+				leilao_compras = :leilao_compra,
+					leilao_preco = :leilao_preco,
 				id_company = :id_company
 
 				WHERE id_leilao = :id_leilao
         	");
 			$sql->bindValue(":leilao_nome", $leilao_nome);
-
+			$sql->bindValue(":leilao_compra", $leilao_compra);
+			$sql->bindValue(":leilao_preco", $leilao_preco);
 			$sql->bindValue(":leilao_endereco", $leilao_endereco);
 			$sql->bindValue(":id_company", $id_company);
 			$sql->bindValue(":id_leilao", $id_leilao);
@@ -165,7 +180,6 @@ class Leilao extends model
 				break;
 		}
 
-		error_log(print_r($pagamento,1));
 
 		if (isset($id_leilao) && $id_leilao != '') {
 

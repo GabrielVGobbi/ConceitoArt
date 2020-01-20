@@ -28,7 +28,7 @@ include("modalCadastrar.php");
                                     <tr>
                                         <th class="scope" style="width: 10%">Ação</th>
                                         <th class="scope">Nome</th>
-                                        <th class="scope">Email</th>
+                                        <th class="scope">Endereço</th>
                                 
                                     </tr>
                                 </thead>
@@ -68,6 +68,9 @@ include("modalCadastrar.php");
                                         <tr>
                                             <th class="scope" style="width: 10%">Ação</th>
                                             <th class="scope">Nome</th>
+                                            <th class="scope">Compras</th>
+                                            <th class="scope">Total</th>
+
                                             <th class="scope">Ações</th>
                                     
                                         </tr>
@@ -82,6 +85,10 @@ include("modalCadastrar.php");
                                             
                                             </td>
                                             <td><?php echo $cli['leilao_nome'] ?></td>
+
+                                            <td><?php echo $cli['leilao_compras'] ?></td>
+                                            <td>R$ <?php echo number_format($cli['leilao_preco'], 2, ',', '.') ?></td>
+
                                             <td class="text-center">
                                                 <a href="<?php echo BASE_URL;?>leilao/financeiro/<?php echo $cli['id_leilao']; ?>/pagamento/<?php echo ( $cli['pagamento'] == 1) ? '0' : '1' ?>" data-toggle="tooltip" title="" data-original-title="Pagar" ><?php echo ($cli['pagamento'] == 1) ? '<span class="label label-success">Pago</span>' : '<span class="label label-danger">Não Pago</span>' ?> </a>
                                                 <a href="<?php echo BASE_URL;?>leilao/financeiro/<?php echo $cli['id_leilao']; ?>/envio/<?php echo ( $cli['comprovante'] == 1) ? '0' : '1' ?>" data-toggle="tooltip" title="" data-original-title="Enviar Comprovante" ><?php echo ($cli['comprovante'] == 1) ? '<span class="label label-success">Enviado</span>' : '<span class="label label-danger">Não Enviado</span>' ?> </a>
@@ -112,9 +119,8 @@ include("modalCadastrar.php");
 
 
 <script>
-    <?php if (isset($_GET['modalcadastro'])) : error_log(print_r($_GET,1));?>
+    <?php if (isset($_GET['modalcadastro'])) : ?>
     var id = '<?php echo ucfirst($viewData['pageController']) ?>';
-    console.log(id);
     $(function() {
         $('#modalCadastro' + id).modal('show');
     });
