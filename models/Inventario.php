@@ -34,6 +34,10 @@ class Inventario extends model
   {
 
     $r = 0;
+    $proc = '';
+
+    $inner = '';
+
 
     if ($id_inv_situacao == '' || $id_inv_situacao == 0) {
       $where = '';
@@ -43,13 +47,20 @@ class Inventario extends model
 
     $where = $this->buildWhere($filtro, $id);
 
+    if (isset($filtro['procedencia']))
+      $inner = 'LEFT JOIN procedencia proc ON (inv.id_inventario = proc.id_inventario)';
+    $proc = 'proc.descricao,';
+
+
 
     $sql = "SELECT COUNT(*) AS c FROM inventario inv 
     INNER JOIN artista art ON (inv.id_artista = art.id_artista)
     INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+    {$inner}
 
         
-        WHERE " . implode(' AND ', $where);
+      WHERE " . implode(' AND ', $where);
+
     $sql = $this->db->prepare($sql);
 
 
@@ -65,32 +76,36 @@ class Inventario extends model
 
   public function getAll($offset, $filtro, $id)
   {
+    $inner = '';
+    $proc = '';
+
+    if (isset($filtro['procedencia'])) {
+      $inner = 'LEFT JOIN procedencia proc ON (inv.id_inventario = proc.id_inventario)';
+      $proc = 'proc.descricao,';
+    }
 
     $where = $this->buildWhere($filtro, $id);
 
     $sql = "
-    SELECT inv.*, art.art_nome, tec.nome_tecnica FROM
+      SELECT inv.*,{$proc}  art.art_nome, tec.nome_tecnica FROM
     
             inventario inv 
             INNER JOIN artista art ON (inv.id_artista = art.id_artista)
             INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+            {$inner}
 
         
         WHERE " . implode(' AND ', $where) . " GROUP BY inv.id_inventario ORDER BY inv.id_inventario  DESC LIMIT $offset, 10";
     $sql = $this->db->prepare($sql);
 
+
     $this->bindWhere($filtro, $sql);
-
-
 
 
     $sql->execute();
 
     if ($sql->rowCount() > 0) {
-        $this->array = $sql->fetchAll();
-
-       
-        
+      $this->array = $sql->fetchAll();
     }
 
     return $this->array;
@@ -119,10 +134,7 @@ class Inventario extends model
     $sql->execute();
 
     if ($sql->rowCount() > 0) {
-        $this->array = $sql->fetchAll();
-
-       
-        
+      $this->array = $sql->fetchAll();
     }
 
     return $this->array;
@@ -182,7 +194,7 @@ class Inventario extends model
 
       if ($filtro['artista'] != '') {
 
-        $where[] = "art.art_nome LIKE :art_nome";
+        $where[] = "art.art_nome = :art_nome";
       }
     }
 
@@ -231,7 +243,7 @@ class Inventario extends model
 
     if (!empty($filtro['artista'])) {
       if ($filtro['artista'] != '') {
-        $sql->bindValue(":art_nome", '%' . $filtro['artista'] . '%');
+        $sql->bindValue(":art_nome", $filtro['artista']);
       }
     }
 
@@ -537,7 +549,7 @@ class Inventario extends model
 
     $sql->execute();
 
-    
+
     try {
 
       $sql = $this->db->prepare("UPDATE inventario SET
@@ -585,7 +597,7 @@ class Inventario extends model
     $id_situacao = $situacao['id_situacao'];
 
 
-        $sql = $this->db->prepare("UPDATE situacao_obra SET 
+    $sql = $this->db->prepare("UPDATE situacao_obra SET 
 
             id_company             = :id_company,  
             id_user                = :id_user, 
@@ -594,25 +606,28 @@ class Inventario extends model
             situacao_char          = :situacao_char,
             preco_situacao         = :preco_situacao, 
             retirada               = :retirada,
-            codigo                  = :codigo
+            codigo                  = :codigo,
+            preco_bruto      = :preco_bruto
 
             WHERE id_situacao = :id_situacao
 
             ");
 
-        $sql->bindValue(":id_company",          $id_company);
-        $sql->bindValue(":id_situacao",         $id_situacao);
-        $sql->bindValue(":id_user",             $id_user);
-        $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
-        $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
-        $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
-        $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
-        $sql->bindValue(":retirada",            $situacao['edit_retirada']);
-        $sql->bindValue(':codigo',   $situacao['codigo']);
+    $sql->bindValue(":id_company",          $id_company);
+    $sql->bindValue(":id_situacao",         $id_situacao);
+    $sql->bindValue(":id_user",             $id_user);
+    $sql->bindValue(":descricao_situacao",  trim($situacao['edit_situacao']));
+    $sql->bindValue(":data_situacao",       $situacao['edit_data_situacao']);
+    $sql->bindValue(":situacao_char",       $situacao['edit_venda_situacao']);
+    $sql->bindValue(":preco_situacao",      $situacao['edit_preco_situacao']);
+    $sql->bindValue(":preco_bruto",      $situacao['edit_preco_bruto']);
+
+    $sql->bindValue(":retirada",            $situacao['edit_retirada']);
+    $sql->bindValue(':codigo',   $situacao['codigo']);
 
 
 
-        $sql->execute();
+    $sql->execute();
 
 
     try {
@@ -800,7 +815,8 @@ class Inventario extends model
         $errors = error_get_last();
         echo "COPY ERROR: " . $errors['type'];
         echo "<br />\n" . $errors['message'];
-      } else { }
+      } else {
+      }
 
       $sql = $this->db->prepare("INSERT INTO inventario_image (id_inventario,url)
                 VALUES (:id_inventario, :url)
@@ -1173,5 +1189,130 @@ class Inventario extends model
     } else {
       return false;
     }
+  }
+
+  public function getPage($id, $tipo, $filtro)
+  {
+
+
+
+    $inner = '';
+    $proc = '';
+
+    if (isset($filtro['procedencia'])) {
+      $inner = 'LEFT JOIN procedencia proc ON (inv.id_inventario = proc.id_inventario)';
+      $proc = 'proc.descricao,';
+    }
+
+    $itemBefore = array();
+    if ($tipo == 'anterior') {
+
+      $infoItemAtual = $this->atual($id, $filtro);
+
+      $where = $this->buildWhere($filtro, '1');
+
+      $sql = $this->db->prepare(
+        "   SELECT inv.*,{$proc}  art.art_nome, tec.nome_tecnica FROM
+    
+        inventario inv 
+        INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+        INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+        {$inner}  WHERE  " . implode(' AND ', $where) . " AND inv.id_inventario > :id_inventario ORDER BY inv.id_inventario ASC LIMIT 1
+
+            "
+      );
+
+      $this->bindWhere($filtro, $sql);
+
+      $sql->bindValue(":id_inventario", $id);
+      $sql->execute();
+
+
+      if ($sql->rowCount() > 0) {
+        $itemBefore = $sql->fetch();
+
+
+        $id = $itemBefore['id_inventario'];
+
+        return $id;
+      } else {
+        return;
+      }
+    } else if ($tipo == 'proximo') {
+
+      $infoItemAtual = $this->atual($id, $filtro);
+
+
+
+      $where = $this->buildWhere($filtro, '1');
+
+      $sql = $this->db->prepare(
+        "    SELECT inv.*,{$proc}  art.art_nome, tec.nome_tecnica FROM
+    
+        inventario inv 
+        INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+        INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+        {$inner}  WHERE  " . implode(' AND ', $where) . " AND inv.id_inventario < :id_inventario ORDER BY inv.id_inventario DESC  LIMIT 1
+
+            "
+      );
+
+      $this->bindWhere($filtro, $sql);
+      $sql->bindValue(":id_inventario", $id);
+      $sql->execute();
+
+
+      if ($sql->rowCount() > 0) {
+        $itemBefore = $sql->fetch();
+
+
+        $id = $itemBefore['id_inventario'];
+
+        return $id;
+      } else {
+        return;
+      }
+    }
+  }
+
+  public function atual($id, $filtro)
+  {
+    $array = array();
+
+    $inner = '';
+    $proc = '';
+
+    if (isset($filtro['procedencia'])) {
+      $inner = 'LEFT JOIN procedencia proc ON (inv.id_inventario = proc.id_inventario)';
+      $proc = 'proc.descricao,';
+    }
+
+    $where = $this->buildWhere($filtro, '1');
+
+    $sql = $this->db->prepare(
+      "   SELECT inv.*,{$proc}  art.art_nome, tec.nome_tecnica FROM
+    
+      inventario inv 
+      INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+      INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+      {$inner} 
+      
+      WHERE  " . implode(' AND ', $where) . " AND inv.id_inventario = :id LIMIT 1
+
+        "
+    );
+
+
+    $this->bindWhere($filtro, $sql);
+
+
+    $sql->bindValue(":id", $id);
+    $sql->execute();
+
+    if ($sql->rowCount() == 1) {
+      $array = $sql->fetch();
+    }
+
+    return $array;
   }
 }

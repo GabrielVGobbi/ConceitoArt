@@ -1,10 +1,22 @@
 ﻿<?php
 $i = new Inventario;
 $historico = $i->getHistorico($inv['id_inventario'], '');
+
+
 ?>
 
-<div class="modal" role="dialog" z-index="99999" aria-labelledby="myLargeModalLabel"  aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
+
+
+<div class="modal" role="dialog" z-index="99999" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
     <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/inventario/edit_action/<?php echo $inv['id_inventario'] ?>">
+        <div style="float: right;">
+            <?php $proximo = $i->getPage($inv['id_inventario'], 'proximo', $viewData['filtro']);?>
+            <span onclick="changeModalInventario(<?php echo $proximo?>,<?php echo $inv['id_inventario']; ?>)" style="top: 400px;right: 67px;padding: 0px;font-size: 73px;color: #fff;" class="glyphicon glyphicon-chevron-right"></span>
+        </div>
+        <div style="float: left;">
+            <?php $anterior = $i->getPage($inv['id_inventario'], 'anterior', $viewData['filtro']);?>
+            <span onclick="changeModalInventario(<?php echo $anterior?>,<?php echo $inv['id_inventario']; ?>)" style="top: 400px;left: 67px;padding: 0px;font-size: 73px;color: #fff;" class="glyphicon glyphicon-chevron-left"></span></a>
+        </div>
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -12,8 +24,6 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h2 class="modal-title fc-center" align="center" id="exampleModalLabel"><?php echo $inv['art_nome']; ?></h2>
-                    
-
 
 
                 </div>
@@ -93,11 +103,11 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                     <i class="fa fa-paperclip"></i> Foto
                                                     <input type="file" name="fotos[]" multiple>
                                                 </div>
-           
+
                                             </div>
                                         </div>
                                         <div class="col-md-4" style="    margin-top: 96px;">
-                                             <div class="form-group">
+                                            <div class="form-group">
                                                 <label>Localização</label>
                                                 <input type="text" class="form-control" name="localizacao" id="localizacao" autocomplete="off" value="<?php echo $inv['inv_localizacao']; ?>">
                                             </div>
@@ -106,15 +116,15 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                 </div>
                             </div>
                         </div>
-                        <?php $proc = controller::getProcedencia($inv['id_inventario']); ?> 
+                        <?php $proc = controller::getProcedencia($inv['id_inventario']); ?>
                         <div class="box box-default box-solid">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Procêdencia de Compra</h3>
                                     </div>
-                                    
-                                   
+
+
                                     <div class="box-body" style="">
                                         <div class="col-md-8">
                                             <div class="form-group">
@@ -141,7 +151,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                             </div>
                                         </div>
                                     </div>
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -170,7 +180,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                         <input type="text" class="form-control" name="edit_data_situacao" id="edit_data_situacao" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo $hist['data_situacao']; ?>">
                                                     </div>
                                                 </div>
-                                                <?php if($hist['situacao_char'] == 1): ?>
+                                                <?php if ($hist['situacao_char'] == 1) : ?>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <label>Preço Bruto</label>
@@ -213,8 +223,8 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                     </div>
                                                 </div>
 
-                                                <?php if($hist['situacao_char'] == 1): ?>
-                                                    
+                                                <?php if ($hist['situacao_char'] == 1) : ?>
+
                                                     <?php controller::getLucro($inv['id_inventario']); ?>
 
                                                 <?php endif; ?>
@@ -240,7 +250,7 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                     <input type="text" class="form-control" name="data_situacao" id="data_situacao" data-inputmask="'alias': 'mm/yyyy'" data-mask="">
                                                 </div>
                                             </div>
-                                            <?php if($hist['situacao_char'] == 1): ?>
+                                            <?php if ($hist['situacao_char'] == 1) : ?>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>Preço Bruto</label>
@@ -281,63 +291,81 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                <?php else : ?>
-                                    <div class="box-body">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Situação</label>
-                                                <input type="text" class="form-control" id="descricao_situacao" name="descricao_situacao" autocomplete="off">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-2">
-                                            <label>Data</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="data_situacao" id="data_situacao" data-inputmask="'alias': 'mm/yyyy'" data-mask="">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label>Preço</label>
-                                                <input type="text" class="form-control" id="preco_situacao" name="preco_situacao" autocomplete="off">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-1">
-                                            <div class="form-group">
-                                                <label>Retirada</label>
-                                                <input type="text" class="form-control" id="retirada" name="retirada" autocomplete="off">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label>Codigo</label>
-                                                <input type="text" class="form-control" id="leilao_codigo" name="leilao_codigo" autocomplete="off">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label>Venda</label>
-                                                <select class="form-control " name="situacao_char" id="situacao_char">
-                                                    <option value="1"> Vendido</option>
-                                                    <option selected="selected" value="0">Não vendido</option>
-                                                    <option value="2">Defendido</option>
-
-                                                </select>
-                                            </div>
+                                </div>
+                            <?php else : ?>
+                                <div class="box-body">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Situação</label>
+                                            <input type="text" class="form-control" id="descricao_situacao" name="descricao_situacao" autocomplete="off">
                                         </div>
                                     </div>
-                                <?php endif; ?>
+
+                                    <div class="col-md-2">
+                                        <label>Data</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="data_situacao" id="data_situacao" data-inputmask="'alias': 'mm/yyyy'" data-mask="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Preço</label>
+                                            <input type="text" class="form-control" id="preco_situacao" name="preco_situacao" autocomplete="off">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label>Retirada</label>
+                                            <input type="text" class="form-control" id="retirada" name="retirada" autocomplete="off">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Codigo</label>
+                                            <input type="text" class="form-control" id="leilao_codigo" name="leilao_codigo" autocomplete="off">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Venda</label>
+                                            <select class="form-control " name="situacao_char" id="situacao_char">
+                                                <option value="1"> Vendido</option>
+                                                <option selected="selected" value="0">Não vendido</option>
+                                                <option value="2">Defendido</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                
+                <div id="fotos<?php echo $inv['id_inventario'] ?>" style="display: none;">
+                    <div class="box box-default box-solid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-body" style="">
+                                    <?php $img_obras = $this->inventario->getImagesByProduct($inv['id_inventario']) ?>
+                                    <?php $artista = str_replace(' ', '_', $inv['art_nome']); ?>
+                                    <?php foreach ($img_obras as $img) : ?>
+                                        <div class="col-md-6">
+                                            <img src="<?php echo BASE_URL ?>assets/images/anuncios/<?php echo $artista ?>/<?php echo $img['url'] ?>" class="img-table" />
+                                        </div>
+                                    <?php endforeach ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Salvar</button>
@@ -357,7 +385,11 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
         $("#fotos" + id).hide("slow");
 
     }
+    function changeModalInventario(idtroca, idatual){
 
+        $('#modalVisualizar'+idatual).modal('hide');
+        $('#modalVisualizar'+idtroca).modal('show');    
+    }
     function fotos_obra(id) {
 
         $("#dados_obras" + id).hide("slow");
@@ -365,8 +397,4 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
 
     }
 
-    function change_artist() {
-        $(".input_artista").show("slow");
-    }
 </script>
-
