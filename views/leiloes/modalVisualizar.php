@@ -66,7 +66,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Endereço</label>
-                                                    <input type="text" class="form-control" name="leilao_endereco" id="leilao_endereco" autocomplete="off" value="R$ <?php echo ( isset($cli['leilao_endereco'])) ? $cli['leilao_endereco']   : ''; ?>">
+                                                    <input type="text" class="form-control" name="leilao_endereco" id="leilao_endereco" autocomplete="off" value=" <?php echo ( isset($cli['leilao_endereco'])) ? $cli['leilao_endereco']   : ''; ?>">
                                                 </div>
                                             </div>
     
