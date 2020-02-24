@@ -4,6 +4,7 @@ Class Relatorio extends model {
 
 	public function __construct(){
 		parent::__construct();
+		
 		$this->array = array();
 		$this->retorno = array();
 		$this->artista = new Artista();
@@ -14,24 +15,28 @@ Class Relatorio extends model {
 	}
 
 	public function getRelatorioByFiltro($filtro){
-
 		
-
 		$this->where = $this->buildWhere($filtro);
 		
 		$sql = "SELECT * 
-		FROM  situacao_obra sit
-		INNER JOIN inventario inv ON (inv.id_inventario = sit.id_inventario)
-		INNER JOIN artista art ON (inv.id_artista = art.id_artista)
-		INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+			FROM  situacao_obra sit
+
+				INNER JOIN inventario inv ON (inv.id_inventario = sit.id_inventario)
+				INNER JOIN artista art ON (inv.id_artista = art.id_artista)
+				INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
+
+			WHERE " .implode(' AND ', $this->where)." ORDER BY ".$filtro['ordem'];
 		
-		WHERE " .implode(' AND ', $this->where)." ORDER BY codigo, art.art_nome ";
 		$sql = $this->db->prepare($sql);
+
 		$this->bindWhere($filtro, $sql);
+		error_log(print_r($sql,1));
 		$sql->execute();
+		
 		if($sql->rowCount() > 0) {
 			$this->array = $sql->fetchAll();
 		}
+		
 		return $this->array;
 	}
 
@@ -175,3 +180,4 @@ Class Relatorio extends model {
 	}
 
 }
+?>

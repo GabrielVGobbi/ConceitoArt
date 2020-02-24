@@ -53,7 +53,7 @@ class controller
         include 'views/relatorios/' . $viewName . '.php';
     }
 
-    public function loadImg($viewData = array(), $lay_Width)
+    public function loadImg($viewData = array(), $lay_Width, $excluirFoto = false)
     {
         extract($viewData);
 

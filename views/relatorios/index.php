@@ -1,13 +1,13 @@
 <div class="row">
 	<div class="col-md-2">
 		<a class="btn btn-app" onclick="gerarRelatorio()">
-			<i class="fa fa-print" "></i> Gerar Relatorio
+			<i class="fa fa-print"></i> Gerar Relatorio
 		</a>
 	</div>
 
 	<div class="col-md-2" >
 		<a class="btn btn-app" onclick="gerarRecibo()" >
-			<i class="fa fa-print" ></i> Gerar Recibo
+			<i class="fa fa-print"></i> Gerar Recibo
 		</a>
 	</div>
 

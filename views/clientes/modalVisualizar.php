@@ -41,7 +41,7 @@
                                                 <label>CPF</label>
                                                 
                                                  
-                                                 <input id="cpfcnpj" class="form-control" type="text" placeholder="digite o CPF ou CNPJ" name="cpf" value="<?php echo $cli['cliente_cpf']; ?>" required>
+                                                 <input id="cpfcnpj" class="form-control" type="text" placeholder="digite o CPF ou CNPJ" name="cpf" value="<?php echo $cli['cliente_cpf']; ?>" data-mask="" data-inputmask="'mask': '999.999.999-99'" required>
 
                                             </div>
                                         </div>

@@ -134,7 +134,7 @@ class Fotos extends model
 	public function delete($id)
 	{
 
-
+error_log(print_r($id,1));
 
 		$sql = "SELECT * FROM  
 			inventario_image invimg 
@@ -150,8 +150,6 @@ class Fotos extends model
 
 		if ($sql->rowCount() > 0) {
 			$array = $sql->fetch();
-			
-		
 			
 			$artista = str_replace(' ', '_', $array['art_nome']);
 			$img =  'assets/images/anuncios/' . $artista . '/' . $array['url'];

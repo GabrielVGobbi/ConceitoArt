@@ -1785,8 +1785,8 @@ date_default_timezone_set('America/Sao_Paulo');
 $semana1 = ucfirst('%A');
 $de = mb_strtolower('de');
 
-$data = mb_strtolower(strftime($semana1.', %d ' .$de. ' %B ' .$de. ' %Y', strtotime('today')));
-echo ucwords($data);
+$data = mb_strtolower(strftime('%d ' .$de. ' %B ' .$de. ' %Y', strtotime('today')));
+echo mb_strtolower(ucwords($data));
 
 ?>
 </span></p>

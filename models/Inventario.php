@@ -151,7 +151,6 @@ class Inventario extends model
         SELECT *  FROM inventario inv 
         INNER JOIN artista art ON (inv.id_artista = art.id_artista)
         INNER JOIN tecnica tec ON (inv.id_tecnica = tec.id_tecnica)
-        INNER JOIN inventario_image img ON (inv.id_inventario = img.id_inventario)
 
         
         WHERE " . implode(' AND ', $where);
@@ -202,7 +201,7 @@ class Inventario extends model
 
       if ($filtro['titulo'] != '') {
 
-        $where[] = "(inv_descricao LIKE :inv_descricao) OR (inv_tiragem LIKE :inv_descricao) OR (tec.nome_tecnica LIKE :inv_descricao)";
+        $where[] = "(inv_descricao LIKE :inv_descricao) OR (inv_tiragem LIKE :inv_descricao) OR (tec.nome_tecnica LIKE :inv_descricao) OR (inv_localizacao LIKE :inv_descricao)";
       }
     }
 

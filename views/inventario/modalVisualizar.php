@@ -10,12 +10,12 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
 <div class="modal" role="dialog" z-index="99999" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $inv['id_inventario']; ?>">
     <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/inventario/edit_action/<?php echo $inv['id_inventario'] ?>">
         <div style="float: right;">
-            <?php $proximo = $i->getPage($inv['id_inventario'], 'proximo', $viewData['filtro']);?>
-            <span onclick="changeModalInventario(<?php echo $proximo?>,<?php echo $inv['id_inventario']; ?>)" style="top: 400px;right: 67px;padding: 0px;font-size: 73px;color: #fff;" class="glyphicon glyphicon-chevron-right"></span>
+            <?php $proximo = $i->getPage($inv['id_inventario'], 'proximo', $viewData['filtro']); ?>
+            <span onclick="changeModalInventario(<?php echo $proximo ?>,<?php echo $inv['id_inventario']; ?>)" style="top: 400px;right: 67px;padding: 0px;font-size: 73px;color: #fff;" class="glyphicon glyphicon-chevron-right"></span>
         </div>
         <div style="float: left;">
-            <?php $anterior = $i->getPage($inv['id_inventario'], 'anterior', $viewData['filtro']);?>
-            <span onclick="changeModalInventario(<?php echo $anterior?>,<?php echo $inv['id_inventario']; ?>)" style="top: 400px;left: 67px;padding: 0px;font-size: 73px;color: #fff;" class="glyphicon glyphicon-chevron-left"></span></a>
+            <?php $anterior = $i->getPage($inv['id_inventario'], 'anterior', $viewData['filtro']); ?>
+            <span onclick="changeModalInventario(<?php echo $anterior ?>,<?php echo $inv['id_inventario']; ?>)" style="top: 400px;left: 67px;padding: 0px;font-size: 73px;color: #fff;" class="glyphicon glyphicon-chevron-left"></span></a>
         </div>
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -95,8 +95,9 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
 
                                         </div>
                                         <div class="col-md-4">
+
                                             <div class="form-group">
-                                                <?php $this->loadImg($inv, true); ?>
+                                                <?php $this->loadImg($inv, true, true); ?>
                                             </div>
                                             <div class="form-group">
                                                 <div class="btn btn-default btn-file">
@@ -355,9 +356,11 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                     <?php $img_obras = $this->inventario->getImagesByProduct($inv['id_inventario']) ?>
                                     <?php $artista = str_replace(' ', '_', $inv['art_nome']); ?>
                                     <?php foreach ($img_obras as $img) : ?>
-                                        <div class="col-md-6">
-                                            <img src="<?php echo BASE_URL ?>assets/images/anuncios/<?php echo $artista ?>/<?php echo $img['url'] ?>" class="img-table" />
-                                        </div>
+                                        <?php if (isset($img['url'])) : ?>
+                                            <div class="col-md-6">
+                                                <img src="<?php echo BASE_URL ?>assets/images/anuncios/<?php echo $artista ?>/<?php echo $img['url'] ?>" class="img-table" />
+                                            </div>
+                                        <?php endif; ?>
                                     <?php endforeach ?>
                                 </div>
                             </div>
@@ -385,16 +388,17 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
         $("#fotos" + id).hide("slow");
 
     }
-    function changeModalInventario(idtroca, idatual){
 
-        $('#modalVisualizar'+idatual).modal('hide');
-        $('#modalVisualizar'+idtroca).modal('show');    
+    function changeModalInventario(idtroca, idatual) {
+
+        $('#modalVisualizar' + idatual).modal('hide');
+        $('#modalVisualizar' + idtroca).modal('show');
     }
+
     function fotos_obra(id) {
 
         $("#dados_obras" + id).hide("slow");
         $("#fotos" + id).show("slow");
 
     }
-
 </script>

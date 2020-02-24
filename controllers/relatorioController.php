@@ -72,7 +72,7 @@ class relatorioController extends controller
 
                 $this->dataInfo['nome_r']       =  $dados_cliente[0]['cliente_nome'];
                 $this->dataInfo['cpf_r']        =  $dados_cliente[0]['cliente_cpf'];
-                $this->dataInfo['endereco_r']   =  $dados_cliente[0]['cliente_endereco'];
+                $this->dataInfo['endereco_r']   =  isset($dados_cliente[0]['cliente_endereco']) ? $dados_cliente[0]['cliente_endereco'] : '' ;
                 $this->dataInfo['rg_r']         =  $dados_cliente[0]['cliente_rg'];
                 
             }else {
@@ -99,8 +99,7 @@ class relatorioController extends controller
             $this->filtro = $_GET['filtros'];
         }
 
-        $this->dataInfo['artista'] = $this->artista->getAll('', $this->user->getCompany());
-        $this->dataInfo['tecnica'] = $this->tecnica->getAll('', $this->user->getCompany());
+      
         $this->dataInfo['tableDados'] = $this->relatorio->getRelatorioByFiltro($this->filtro);
         $this->dataInfo['total'] = $this->relatorio->getTotalByFiltro($this->filtro);
 

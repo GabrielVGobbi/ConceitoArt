@@ -75,15 +75,9 @@ class FotosController extends controller
 
         $result = $this->fotos->delete($id, $this->user->getCompany());
 
-        header("Location: " . BASE_URL . "fotos");
+        controller::alert('success', 'erro');
 
-        if ($result) {
-            $this->dataInfo['success'] = 'true';
-            $this->dataInfo['mensagem'] = "Exclusão feita com sucesso!!";
-        } else {
-            $this->dataInfo['error'] = 'true';
-            $this->dataInfo['mensagem'] = "Não foi possivel excluir!";
-        }
+        header("Location: " . BASE_URL . "inventario");
     }
 
 }

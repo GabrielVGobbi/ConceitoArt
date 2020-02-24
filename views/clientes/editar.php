@@ -1,9 +1,9 @@
     <div class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalVisualizar<?php echo $cli['id_cliente']; ?>">
         <form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>/clientes/edit_action/<?php echo $cli['id_cliente'] ?>">
-            
-        <input type="text" class="form-control" style="display:none" name="id_endereco" id="id_endereco" autocomplete="off" value="<?php echo $cli['id_endereco']; ?>">
-        <input type="text" class="form-control" style="display:none" name="id_cliente" id="id_cliente" autocomplete="off" value="<?php echo $cli['id_cliente']; ?>">
-        <input type="text" class="form-control" style="display:none" name="cliente_nome" id="cliente_nome" autocomplete="off" value="<?php echo $cli['cliente_nome']; ?>">
+
+            <input type="text" class="form-control" style="display:none" name="id_endereco" id="id_endereco" autocomplete="off" value="<?php echo $cli['id_endereco']; ?>">
+            <input type="text" class="form-control" style="display:none" name="id_cliente" id="id_cliente" autocomplete="off" value="<?php echo $cli['id_cliente']; ?>">
+            <input type="text" class="form-control" style="display:none" name="cliente_nome" id="cliente_nome" autocomplete="off" value="<?php echo $cli['cliente_nome']; ?>">
 
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -39,7 +39,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>CPF</label>
-                                                <input type="text" class="form-control" name="cpf" id="cpf" autocomplete="off" value="<?php echo $cli['cliente_cpf']; ?>">
+                                                <input type="text" class="form-control" name="cpf" id="cpf" autocomplete=" off"  value="<?php echo $cli['cliente_cpf']; ?>"  >
                                             </div>
                                         </div>
                                     </div>

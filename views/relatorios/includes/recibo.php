@@ -22,7 +22,7 @@
 								<div class="col-md-2">
 									<div class="form-group">
 										<label>CPF</label>
-										<input type="text" class="form-control" name="cpf" id="cpf" autocomplete="off" value="264.295.538-92" required>
+										<input type="text" class="form-control" name="cpf" id="cpf" autocomplete="off" value="292.824.878-14" required>
 									</div>
 								</div>
 
