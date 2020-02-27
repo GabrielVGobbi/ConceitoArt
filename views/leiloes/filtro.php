@@ -24,12 +24,18 @@
 							</div>
 						</div>
 
-						<div class="col-md-11">
+						<div class="col-md-9">
 							<label for="fl_art_nome">Nome</label>
 							<div class="form-group">
 								<input class="form-control" id="filtro_cliente_Nome" name="filtros[leilao_nome]" placeholder="" autocomplete="off">
-
 							</div>
+						</div>
+
+						<div class="col-md-2">
+							<label for="fl_art_nome">Nome</label>
+							<select class="form-control select2 select2-hidden-accessible" name="filtros[situacao]" id="filtros[situacao]" style="width: 100%;" tabindex="-1" aria-hidden="true">
+								<option value="todos">Todos</option>
+							</select>
 						</div>
 					</div>
 

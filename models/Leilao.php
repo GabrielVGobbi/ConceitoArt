@@ -26,7 +26,6 @@ class Leilao extends model
 		$this->bindWhere($filtro, $sql);
 
 		$sql->execute();
-
 		if ($sql->rowCount() > 0) {
 			$this->array = $sql->fetchAll();
 		}
@@ -37,11 +36,9 @@ class Leilao extends model
 	private function buildWhere($filtro, $id)
 	{
 
-
 		$where = array(
-			'lei.id_company=' . $id
+			'lei.id_company=' . $id,
 		);
-
 
 		if (!empty($filtro['leilao_nome'])) {
 
@@ -57,6 +54,16 @@ class Leilao extends model
 
 				$where[] = "id_leilao = :id_leilao";
 			}
+		}
+
+		if (!empty($filtro['situacao'])) {
+
+			if ($filtro['situacao'] != '') {
+		
+			}
+		} else {
+			$where[] = "(leif.pagamento <> 1 OR leif.comprovante <> 1 OR leif.cadastro <> 1)";
+
 		}
 
 		return $where;
