@@ -374,6 +374,8 @@ class Inventario extends model
       $id_artista = $Parametros['id_artista'];
     }
 
+    
+
     $compra = array();
     $situacao = array();
     $action = 'EDIÇÃO';
@@ -389,7 +391,8 @@ class Inventario extends model
     $localizacao = isset($Parametros['localizacao']) ? $Parametros['localizacao'] : '';
 
     //PROCEDENCIA DA OBRA
-    $compra['procedencia']                            =  controller::ReturnValor($Parametros['procedencia']);
+    $Parametros['n_leilao'] = isset($Parametros['n_leilao']) && ($Parametros['n_leilao']!='') ? 'Leilão '.$Parametros['n_leilao'].' - ' : '';
+    $compra['procedencia']                            =  $Parametros['n_leilao'].controller::ReturnValor($Parametros['procedencia']);
     $compra['data_procedencia']                       = ($Parametros['data_procedencia']);
     $compra['preco_procedencia']                      =  controller::PriceSituation($Parametros['preco_procedencia']);
 

@@ -123,21 +123,25 @@ $historico = $i->getHistorico($inv['id_inventario'], '');
                                 <div class="col-md-12">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Procêdencia de Compra</h3>
-                                    </div>
-
-
+                                    </div> 
                                     <div class="box-body" style="">
-                                        <div class="col-md-8">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Nº Leilão</label>
+                                                <input type="text" class="form-control" name="n_leilao" id="n_leilao" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Procêdencia</label>
-                                                <input type="text" class="form-control" name="procedencia" id="procedencia" autocomplete="off" value="<?php echo $proc['descricao']; ?>">
+                                                <input type="text" class="form-control" name="procedencia" id="procedencia" value="<?php echo $proc['descricao']; ?>">
                                             </div>
                                         </div>
 
                                         <div class="col-md-2">
                                             <label>Data</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="data_procedencia" id="data_procedencia" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo $proc['data']; ?>">
+                                                <input type="text" class="form-control" name="data_procedencia" id="data_procedencia" data-inputmask="'alias': 'mm/yyyy'" data-mask="" value="<?php echo ($proc['data'] == '') ? controller::getMesDayNOW().'/'.controller::getAnoNow() : $proc['data'] ?>">
                                             </div>
                                         </div>
 
